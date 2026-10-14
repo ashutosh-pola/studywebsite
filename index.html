@@ -1,0 +1,2319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Tracker</title>
+  
+  <!-- Favicon SVG -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%2339d353%22><circle cx=%2212%22 cy=%2212%22 r=%2210%22/><polyline points=%2212 6 12 12 16 14%22 fill=%22none%22 stroke=%22%230d1117%22 stroke-width=%222.5%22/></svg>">
+
+  <!-- Mobile & Tablet PWA Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Study Tracker">
+  <meta name="theme-color" content="#0d1117">
+
+  <style>
+    /* ==========================================================================
+       GitHub Dark Mode Theme Tokens
+       ========================================================================== */
+    :root {
+      --bg-canvas: #0d1117;
+      --bg-surface: #161b22;
+      --bg-subtle: #21262d;
+      --border-default: #30363d;
+      --border-muted: #21262d;
+      --text-primary: #f0f6fc;
+      --text-secondary: #8b949e;
+      --text-muted: #6e7681;
+      
+      --accent-green: #238636;
+      --accent-green-hover: #2ea043;
+      --accent-green-glow: rgba(35, 134, 54, 0.4);
+      --accent-red: #da3633;
+      --accent-red-hover: #f85149;
+      --accent-blue: #58a6ff;
+      --accent-purple: #bc8cff;
+      --accent-gold: #d29922;
+
+      /* GitHub Activity Heatmap Green Palette */
+      --heat-0: #161b22;
+      --heat-1: #0e4429;
+      --heat-2: #006d32;
+      --heat-3: #26a641;
+      --heat-4: #39d353;
+
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
+
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-canvas);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px 50px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 960px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* ==========================================================================
+       Header & Brand
+       ========================================================================== */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 34px;
+      height: 34px;
+      background: linear-gradient(135deg, #238636, #39d353);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(35, 134, 54, 0.4);
+    }
+
+    .brand h1 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+
+    .brand-tag {
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-muted);
+      border-radius: 12px;
+      padding: 2px 8px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .sync-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      padding: 4px 10px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-default);
+      border-radius: 20px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      box-shadow: 0 0 6px var(--accent-green);
+    }
+
+    /* ==========================================================================
+       Summary Stats Cards
+       ========================================================================== */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .metric-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      transition: border-color 0.2s ease, transform 0.15s ease;
+    }
+
+    .metric-card:hover {
+      border-color: var(--accent-blue);
+      transform: translateY(-1px);
+    }
+
+    .metric-title {
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .metric-value {
+      font-family: var(--font-mono);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+    }
+
+    .metric-subtitle {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* ==========================================================================
+       Study Timer Section
+       ========================================================================== */
+    .timer-section {
+      background: radial-gradient(circle at 50% 15%, #1c232e 0%, var(--bg-surface) 80%);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      padding: 36px 24px 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      position: relative;
+    }
+
+    .timer-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 4px 14px;
+      border-radius: 20px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-default);
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      transition: all 0.25s ease;
+    }
+
+    .timer-pill.running {
+      background: rgba(35, 134, 54, 0.15);
+      border-color: var(--accent-green);
+      color: #3fb950;
+    }
+
+    .timer-pill.paused {
+      background: rgba(210, 153, 34, 0.15);
+      border-color: var(--accent-gold);
+      color: #e3b341;
+    }
+
+    .stopwatch-display {
+      font-family: var(--font-mono);
+      font-size: clamp(3.2rem, 9.5vw, 5.2rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      margin-bottom: 28px;
+      user-select: none;
+      transition: color 0.2s ease, text-shadow 0.2s ease;
+    }
+
+    .timer-running .stopwatch-display {
+      color: #ffffff;
+      text-shadow: 0 0 30px rgba(57, 211, 83, 0.3);
+    }
+
+    .timer-controls {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+
+    /* Buttons */
+    .btn {
+      appearance: none;
+      border: 1px solid transparent;
+      padding: 10px 22px;
+      border-radius: var(--radius-sm);
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s ease-in-out;
+      user-select: none;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 0.78rem;
+    }
+
+    .btn-primary {
+      background-color: var(--accent-green);
+      color: #ffffff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background-color: var(--accent-green-hover);
+      box-shadow: 0 0 16px var(--accent-green-glow);
+    }
+
+    .btn-secondary {
+      background-color: var(--bg-subtle);
+      color: var(--text-primary);
+      border-color: var(--border-default);
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background-color: #30363d;
+      border-color: #8b949e;
+    }
+
+    .btn-danger {
+      background-color: var(--accent-red);
+      color: #ffffff;
+    }
+
+    .btn-danger:hover:not(:disabled) {
+      background-color: var(--accent-red-hover);
+      box-shadow: 0 0 16px rgba(218, 54, 51, 0.4);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-secondary);
+      border-color: var(--border-default);
+    }
+
+    .btn-ghost:hover:not(:disabled) {
+      background: var(--bg-subtle);
+      color: var(--text-primary);
+    }
+
+    /* ==========================================================================
+       Quick Manual Log Section
+       ========================================================================== */
+    .quick-log-drawer {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      padding: 14px 20px;
+    }
+
+    .quick-log-drawer summary {
+      cursor: pointer;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      font-weight: 500;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .quick-log-drawer summary:hover {
+      color: var(--text-primary);
+    }
+
+    .quick-log-form {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .input-field {
+      background: var(--bg-canvas);
+      border: 1px solid var(--border-default);
+      color: var(--text-primary);
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .input-field:focus {
+      border-color: var(--accent-blue);
+    }
+
+    /* ==========================================================================
+       GitHub-Style Contribution Heatmap
+       ========================================================================== */
+    .heatmap-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .heatmap-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .heatmap-header h2 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .heatmap-header p {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .heatmap-scroll-container {
+      width: 100%;
+      overflow-x: auto;
+      padding-bottom: 12px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .heatmap-inner-wrapper {
+      min-width: 760px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .months-header {
+      display: grid;
+      grid-template-columns: 32px repeat(53, 11px);
+      gap: 3px;
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      height: 16px;
+      line-height: 16px;
+      user-select: none;
+    }
+
+    .months-header span {
+      white-space: nowrap;
+    }
+
+    .heatmap-body {
+      display: flex;
+      gap: 6px;
+    }
+
+    .days-labels {
+      display: grid;
+      grid-template-rows: repeat(7, 11px);
+      gap: 3px;
+      font-size: 0.68rem;
+      color: var(--text-secondary);
+      width: 32px;
+      user-select: none;
+      line-height: 11px;
+    }
+
+    .heatmap-grid {
+      display: grid;
+      grid-template-columns: repeat(53, 11px);
+      grid-template-rows: repeat(7, 11px);
+      gap: 3px;
+      grid-auto-flow: column;
+    }
+
+    .heat-cell {
+      width: 11px;
+      height: 11px;
+      border-radius: 2px;
+      background-color: var(--heat-0);
+      outline: 1px solid var(--border-muted);
+      outline-offset: -1px;
+      cursor: pointer;
+      transition: transform 0.1s ease, outline-color 0.1s ease;
+    }
+
+    .heat-cell:hover {
+      outline: 1.5px solid var(--text-primary);
+      transform: scale(1.35);
+      z-index: 10;
+    }
+
+    .heat-cell[data-level="0"] { background-color: var(--heat-0); }
+    .heat-cell[data-level="1"] { background-color: var(--heat-1); outline-color: rgba(255,255,255,0.03); }
+    .heat-cell[data-level="2"] { background-color: var(--heat-2); outline-color: rgba(255,255,255,0.05); }
+    .heat-cell[data-level="3"] { background-color: var(--heat-3); outline-color: rgba(255,255,255,0.08); }
+    .heat-cell[data-level="4"] { background-color: var(--heat-4); outline-color: rgba(255,255,255,0.1); }
+
+    .heat-cell.future {
+      opacity: 0.15;
+      cursor: default;
+    }
+
+    .heat-cell.future:hover {
+      transform: none;
+      outline-color: var(--border-muted);
+    }
+
+    /* Heatmap Legend & Summary */
+    .heatmap-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 16px;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .legend-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-boxes {
+      display: flex;
+      gap: 3px;
+    }
+
+    .legend-boxes .heat-cell {
+      cursor: default;
+    }
+
+    .legend-boxes .heat-cell:hover {
+      transform: none;
+      outline: none;
+    }
+
+    /* ==========================================================================
+       Floating Tooltip & Toast Notifications
+       ========================================================================== */
+    #tooltip {
+      position: fixed;
+      background: #1c2128;
+      color: #f0f6fc;
+      border: 1px solid #444c56;
+      border-radius: var(--radius-sm);
+      padding: 7px 12px;
+      font-size: 0.76rem;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.12s ease-out;
+      z-index: 99999;
+      white-space: nowrap;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.7);
+      line-height: 1.4;
+    }
+
+    #tooltip strong {
+      color: #39d353;
+      font-weight: 600;
+    }
+
+    /* Arrow caret pointing down towards cell */
+    #tooltip::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: #1c2128 transparent transparent transparent;
+    }
+
+    /* Arrow caret pointing up when tooltip is flipped below */
+    #tooltip.flipped::after {
+      top: auto;
+      bottom: 100%;
+      border-color: transparent transparent #1c2128 transparent;
+    }
+
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--bg-surface);
+      border: 1px solid var(--accent-green);
+      color: var(--text-primary);
+      padding: 12px 20px;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 2000;
+      pointer-events: none;
+    }
+
+    #toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ==========================================================================
+       Subject Category & Color Styles
+       ========================================================================== */
+    .subject-picker-bar {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 22px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-default);
+      padding: 5px 14px;
+      border-radius: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+      transition: border-color 0.2s ease;
+    }
+    .subject-picker-bar:hover {
+      border-color: #8b949e;
+    }
+    .subject-picker-label {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .subject-select-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .subject-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
+      box-shadow: 0 0 6px currentColor;
+      transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .subject-select {
+      background: transparent;
+      color: var(--text-primary);
+      border: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .subject-select option {
+      background: var(--bg-surface);
+      color: var(--text-primary);
+    }
+
+    /* Subject Breakdown Card */
+    .subject-breakdown-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .subject-breakdown-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .subject-breakdown-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.98rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .subject-progress-bar {
+      height: 10px;
+      background: var(--bg-subtle);
+      border-radius: 6px;
+      overflow: hidden;
+      display: flex;
+      width: 100%;
+    }
+    .subject-progress-segment {
+      height: 100%;
+      transition: width 0.3s ease;
+    }
+    .subject-pills-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .subject-filter-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-default);
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .subject-filter-pill:hover {
+      border-color: #8b949e;
+      color: var(--text-primary);
+    }
+    .subject-filter-pill.active {
+      background: rgba(88, 166, 255, 0.12);
+      border-color: var(--accent-blue);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    /* Tooltip Breakdown */
+    .tooltip-header {
+      margin-bottom: 4px;
+    }
+    .tooltip-breakdown {
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .tooltip-subject-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.72rem;
+    }
+    .tooltip-subject-row .subject-dot {
+      width: 7px;
+      height: 7px;
+    }
+
+    /* Modal Overlay & Card */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100000;
+      padding: 16px;
+    }
+    .modal-overlay.open {
+      display: flex;
+    }
+    .modal-content {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 480px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8);
+      display: flex;
+      flex-direction: column;
+    }
+    .modal-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-default);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-header h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+    .modal-close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 1.3rem;
+      line-height: 1;
+      padding: 4px;
+    }
+    .modal-close-btn:hover { color: var(--text-primary); }
+    .modal-body {
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .subject-manage-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+    .subject-manage-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-muted);
+      border-radius: var(--radius-sm);
+    }
+    .subject-manage-item-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.88rem;
+      font-weight: 500;
+    }
+    .subject-hours-badge {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-left: 6px;
+    }
+    .color-swatches-grid {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .color-swatch-btn {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+    .color-swatch-btn:hover {
+      transform: scale(1.15);
+    }
+    .color-swatch-btn.selected {
+      border-color: #fff;
+      transform: scale(1.18);
+      box-shadow: 0 0 8px currentColor;
+    }
+    .custom-color-picker-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: 4px;
+    }
+    .custom-color-input {
+      appearance: none;
+      border: 1px solid var(--border-default);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      background: transparent;
+      padding: 0;
+      outline: none;
+    }
+    .custom-color-input::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+    .custom-color-input::-webkit-color-swatch {
+      border: none;
+      border-radius: 50%;
+    }
+
+    /* Footer */
+    footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      padding: 10px 4px 0;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    footer a {
+      color: var(--text-secondary);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      .stopwatch-display {
+        font-size: 3.2rem;
+      }
+      .timer-controls .btn {
+        width: 100%;
+        justify-content: center;
+      }
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .header-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Top Bar -->
+    <header>
+      <div class="brand">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+        </div>
+        <div>
+          <h1>Study Tracker <span class="brand-tag">v2.0</span></h1>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <div class="sync-status">
+          <div class="status-dot"></div>
+          <span id="storageModeLabel">localStorage</span>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="exportBackup()" title="Download a JSON backup of your study logs">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Export
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="triggerImport()" title="Import study logs from a JSON backup">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+          Import
+        </button>
+        <!-- Hidden File Input for Import -->
+        <input type="file" id="importFileInput" accept=".json,application/json" style="display: none;" onchange="handleFileImport(event)">
+      </div>
+    </header>
+
+    <!-- Summary Stats Cards -->
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          Today's Study Time
+        </div>
+        <div class="metric-value" id="metricToday">0m</div>
+        <div class="metric-subtitle" id="metricGoalText">Target: 120m daily</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2c-.3 0-.6.1-.8.4-1.2 1.4-2.4 3-3.1 4.9C7.2 9.4 7 11.2 7 13c0 2.8 2.2 5 5 5s5-2.2 5-5c0-1.8-.2-3.6-1.1-5.7-.7-1.9-1.9-3.5-3.1-4.9-.2-.3-.5-.4-.8-.4z"></path>
+          </svg>
+          Current Daily Streak
+        </div>
+        <div class="metric-value" id="metricStreak">0 days</div>
+        <div class="metric-subtitle" id="metricStreakSub">Consecutive active days</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+          </svg>
+          Total Hours Tracked
+        </div>
+        <div class="metric-value" id="metricTotal">0.0 hrs</div>
+        <div class="metric-subtitle" id="metricActiveDays">0 active days recorded</div>
+      </div>
+    </div>
+
+    <!-- Study Timer Section -->
+    <div class="timer-section" id="timerSection">
+      <div class="timer-pill" id="timerPill">
+        <span>Session Idle</span>
+      </div>
+
+      <!-- Subject Picker inside Timer -->
+      <div class="subject-picker-bar">
+        <span class="subject-picker-label">Subject:</span>
+        <div class="subject-select-wrap">
+          <span class="subject-dot" id="timerSubjectDot"></span>
+          <select id="timerSubjectSelect" class="subject-select" onchange="onTimerSubjectChange()">
+            <!-- Populated dynamically -->
+          </select>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="openSubjectModal()" title="Manage or Add Subjects" style="padding: 2px 8px; font-size: 0.75rem;">
+          ⚙️ Manage
+        </button>
+      </div>
+
+      <div class="stopwatch-display" id="timeDisplay">00:00:00</div>
+
+      <div class="timer-controls">
+        <button class="btn btn-primary" id="btnToggle" onclick="toggleTimer()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+          Start Session
+        </button>
+
+        <button class="btn btn-danger" id="btnEnd" onclick="endSession()" disabled>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <rect x="5" y="5" width="14" height="14" rx="2"></rect>
+          </svg>
+          End & Log Session
+        </button>
+
+        <button class="btn btn-secondary" id="btnReset" onclick="resetTimer()" disabled>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+            <path d="M3 3v5h5"></path>
+          </svg>
+          Reset
+        </button>
+      </div>
+    </div>
+
+    <!-- Quick Manual Entry Drawer -->
+    <details class="quick-log-drawer">
+      <summary>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Manually Log Study Time
+      </summary>
+      <div class="quick-log-form">
+        <input type="date" id="manualDate" class="input-field">
+        <div class="subject-select-wrap" style="background: var(--bg-canvas); border: 1px solid var(--border-default); border-radius: var(--radius-sm); padding: 4px 10px;">
+          <span class="subject-dot" id="manualSubjectDot"></span>
+          <select id="manualSubjectSelect" class="subject-select" onchange="onManualSubjectChange()" style="font-size: 0.82rem;">
+            <!-- Populated dynamically -->
+          </select>
+        </div>
+        <input type="number" id="manualMinutes" class="input-field" placeholder="Duration (minutes)" min="1" max="1440">
+        <button class="btn btn-secondary" onclick="logManualEntry()">Log Session</button>
+        <button class="btn btn-ghost btn-sm" onclick="seedDemoData()" title="Populate realistic dummy data for 90 days across subjects to test the heatmap">
+          🎲 Seed Demo Data
+        </button>
+      </div>
+    </details>
+
+    <!-- Subject Breakdown & Heatmap Filter Card -->
+    <div class="subject-breakdown-card" id="subjectBreakdownCard">
+      <div class="subject-breakdown-header">
+        <div class="subject-breakdown-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+            <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
+          </svg>
+          <span>Subject Breakdown & Heatmap Filter</span>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="openSubjectModal()">
+          + Add / Edit Subjects
+        </button>
+      </div>
+
+      <!-- Multi-color distribution progress bar -->
+      <div class="subject-progress-bar" id="subjectProgressBar"></div>
+
+      <!-- Filter pills -->
+      <div class="subject-pills-row" id="subjectPillsRow"></div>
+    </div>
+
+    <!-- 52-Week Contribution Heatmap -->
+    <div class="heatmap-card">
+      <div class="heatmap-header">
+        <div>
+          <h2>Study Activity Heatmap</h2>
+          <p id="heatmapSubtitle">Tracking daily focus duration across the last 52 weeks</p>
+        </div>
+      </div>
+
+      <div class="heatmap-scroll-container">
+        <div class="heatmap-inner-wrapper">
+          <!-- Month Header Labels -->
+          <div class="months-header" id="monthsHeader">
+            <span></span><!-- day label column offset -->
+          </div>
+
+          <div class="heatmap-body">
+            <!-- Day of Week (Mon - Sun) Labels -->
+            <div class="days-labels">
+              <span>Mon</span>
+              <span></span>
+              <span>Wed</span>
+              <span></span>
+              <span>Fri</span>
+              <span></span>
+              <span>Sun</span>
+            </div>
+
+            <!-- Heatmap Grid (7 rows x 53 columns) -->
+            <div class="heatmap-grid" id="heatmapGrid"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="heatmap-footer">
+        <span id="heatmapStatsSummary">Calculating focus statistics...</span>
+        <div class="legend-group">
+          <span>Less</span>
+          <div class="legend-boxes">
+            <div class="heat-cell" data-level="0" title="0 mins"></div>
+            <div class="heat-cell" data-level="1" title="1 - 30 mins"></div>
+            <div class="heat-cell" data-level="2" title="31 - 60 mins"></div>
+            <div class="heat-cell" data-level="3" title="61 - 120 mins"></div>
+            <div class="heat-cell" data-level="4" title="120+ mins"></div>
+          </div>
+          <span>More</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <span>Zero-dependency &bull; Works offline via localStorage &bull; Deployable to GitHub Pages, Vercel & Firebase</span>
+      <span><a href="javascript:void(0)" onclick="clearAllData()">Reset All Data</a></span>
+    </footer>
+  </div>
+
+  <!-- Subject Management Modal -->
+  <div class="modal-overlay" id="subjectModal" onclick="closeSubjectModalOnOverlay(event)">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Manage Study Subjects</h3>
+        <button class="modal-close-btn" onclick="closeSubjectModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <span class="metric-title" style="margin-bottom: 8px;">Your Subjects</span>
+          <div class="subject-manage-list" id="subjectManageList">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <div style="border-top: 1px solid var(--border-default); padding-top: 16px;">
+          <span class="metric-title" style="margin-bottom: 10px;">Add New Subject</span>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <input type="text" id="newSubjectName" class="input-field" placeholder="Subject name (e.g. Organic Chemistry)" maxlength="28">
+            
+            <div>
+              <span style="font-size: 0.78rem; color: var(--text-secondary);">Choose Subject Color:</span>
+              <div class="color-swatches-grid" id="colorSwatchesGrid">
+                <!-- Color swatches rendered dynamically -->
+                <div class="custom-color-picker-wrap" title="Custom color picker">
+                  <input type="color" id="customColorInput" class="custom-color-input" value="#58a6ff" onchange="onCustomColorPick(event)">
+                </div>
+              </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="createNewSubject()" style="justify-content: center; margin-top: 4px;">
+              + Create Subject
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Tooltip -->
+  <div id="tooltip"></div>
+
+  <!-- Toast Element -->
+  <div id="toast">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#39d353" stroke-width="2">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+      <polyline points="22 4 12 14.01 9 11.01"></polyline>
+    </svg>
+    <span id="toastMsg">Session logged!</span>
+  </div>
+
+  <script>
+    /**
+     * ========================================================================
+     * Study Tracker Application Logic
+     * ========================================================================
+     * 1. Accurate background-proof stopwatch using timestamp offsets
+     * 2. Full 52-week GitHub-style heatmap (Mon-Sun Y-axis, Jan-Dec X-axis)
+     * 3. Pluggable Storage Layer (LocalStorage ready, Firebase drop-in ready)
+     * ========================================================================
+     */
+
+    // --- Configuration & Constants ---
+    const STORAGE_KEY_DATA = 'study_tracker_data_v1';
+    const STORAGE_KEY_TIMER = 'study_tracker_active_timer_v1';
+    const STORAGE_KEY_SUBJECTS = 'study_tracker_subjects_v1';
+
+    const DEFAULT_SUBJECTS = [
+      { id: "cs", name: "Computer Science", color: "#bc8cff" },
+      { id: "math", name: "Mathematics", color: "#58a6ff" },
+      { id: "physics", name: "Physics & Science", color: "#f0883e" },
+      { id: "reading", name: "Literature & Reading", color: "#39c5bb" },
+      { id: "general", name: "General Study", color: "#3fb950" }
+    ];
+
+    const PRESET_COLORS = [
+      "#58a6ff", // Sapphire Blue
+      "#bc8cff", // Amethyst Purple
+      "#3fb950", // Emerald Green
+      "#f0883e", // Sunset Orange
+      "#f778ba", // Rose Pink
+      "#d29922", // Golden Yellow
+      "#39c5bb", // Cyber Teal
+      "#f85149"  // Ruby Red
+    ];
+
+    // ========================================================================
+    // STORAGE ADAPTER (Clean abstraction for LocalStorage vs. Firebase)
+    // ========================================================================
+    const USE_FIREBASE = false;
+    const FIREBASE_CONFIG = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      projectId: "YOUR_PROJECT",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "...",
+      appId: "..."
+    };
+
+    const StorageAdapter = {
+      async loadSubjects() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY_SUBJECTS);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+          }
+        } catch (e) {
+          console.warn("Could not load subjects from storage", e);
+        }
+        return JSON.parse(JSON.stringify(DEFAULT_SUBJECTS));
+      },
+
+      async saveSubjects(newSubjects) {
+        localStorage.setItem(STORAGE_KEY_SUBJECTS, JSON.stringify(newSubjects));
+        return newSubjects;
+      },
+
+      async loadData() {
+        if (USE_FIREBASE && window.firebase) {
+          const db = firebase.firestore();
+          const doc = await db.collection("study_tracker").doc("user_history").get();
+          return doc.exists ? doc.data().history || {} : {};
+        }
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY_DATA);
+          return raw ? JSON.parse(raw) : {};
+        } catch (e) {
+          console.error("Failed to parse localStorage data", e);
+          return {};
+        }
+      },
+
+      async saveSession(dateStr, addedMinutes, subjectId = "general") {
+        let current = await this.loadData();
+        let day = normalizeDayData(current[dateStr]);
+        day.total += addedMinutes;
+        day.subjects[subjectId] = (day.subjects[subjectId] || 0) + addedMinutes;
+        current[dateStr] = day;
+
+        if (USE_FIREBASE && window.firebase) {
+          const db = firebase.firestore();
+          await db.collection("study_tracker").doc("user_history").set({ history: current }, { merge: true });
+        } else {
+          localStorage.setItem(STORAGE_KEY_DATA, JSON.stringify(current));
+        }
+        return current;
+      },
+
+      async replaceAllData(newData) {
+        if (USE_FIREBASE && window.firebase) {
+          const db = firebase.firestore();
+          await db.collection("study_tracker").doc("user_history").set({ history: newData });
+        } else {
+          localStorage.setItem(STORAGE_KEY_DATA, JSON.stringify(newData));
+        }
+        return newData;
+      }
+    };
+
+    // --- State Variables ---
+    let subjects = [];
+    let activeSubjectId = "cs";
+    let activeFilterSubject = "all"; // 'all' or specific subjectId
+    let selectedNewSubjectColor = PRESET_COLORS[0];
+
+    let studyData = {}; // Format: { "YYYY-MM-DD": { total: number, subjects: { [id]: number } } }
+    let timerState = 'idle'; // 'idle', 'running', 'paused'
+    let timerStartTime = null; // Epoch timestamp (ms) when current run began
+    let accumulatedSeconds = 0; // Accumulated seconds from previous running chunks
+    let timerInterval = null;
+    let todayDateStr = "";
+
+    // --- DOM Elements ---
+    const timeDisplay = document.getElementById('timeDisplay');
+    const timerSection = document.getElementById('timerSection');
+    const timerPill = document.getElementById('timerPill');
+    const btnToggle = document.getElementById('btnToggle');
+    const btnEnd = document.getElementById('btnEnd');
+    const btnReset = document.getElementById('btnReset');
+    const heatmapGrid = document.getElementById('heatmapGrid');
+    const monthsHeader = document.getElementById('monthsHeader');
+    const tooltip = document.getElementById('tooltip');
+    const toast = document.getElementById('toast');
+    const toastMsg = document.getElementById('toastMsg');
+
+    // ========================================================================
+    // DATA NORMALIZATION & SUBJECT HELPERS
+    // ========================================================================
+    function normalizeDayData(val) {
+      if (!val) return { total: 0, subjects: {} };
+      if (typeof val === 'number') {
+        return { total: val, subjects: { "general": val } };
+      }
+      return {
+        total: typeof val.total === 'number' ? val.total : 0,
+        subjects: val.subjects || {}
+      };
+    }
+
+    function getSubjectById(id) {
+      const found = subjects.find(s => s.id === id);
+      if (found) return found;
+      return { id: id, name: id.charAt(0).toUpperCase() + id.slice(1), color: "#8b949e" };
+    }
+
+    function hexToRgba(hex, alpha) {
+      let c = (hex || "#39d353").replace('#', '');
+      if (c.length === 3) c = c.split('').map(x => x + x).join('');
+      const num = parseInt(c, 16);
+      const r = (num >> 16) & 255;
+      const g = (num >> 8) & 255;
+      const b = num & 255;
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+
+    // ========================================================================
+    // DATE UTILITIES
+    // ========================================================================
+    function getLocalDateString(d) {
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    function initDates() {
+      const today = new Date();
+      todayDateStr = getLocalDateString(today);
+      document.getElementById('manualDate').value = todayDateStr;
+    }
+
+    // ========================================================================
+    // SUBJECTS UI & DISTRIBUTION BREAKDOWN
+    // ========================================================================
+    function renderSubjectBreakdown() {
+      // 1. Calculate cumulative minutes per subject
+      const subjectTotals = {};
+      let grandTotalMins = 0;
+
+      subjects.forEach(s => { subjectTotals[s.id] = 0; });
+
+      for (const dayVal of Object.values(studyData)) {
+        const day = normalizeDayData(dayVal);
+        for (const [subId, mins] of Object.entries(day.subjects)) {
+          if (mins > 0) {
+            subjectTotals[subId] = (subjectTotals[subId] || 0) + mins;
+            grandTotalMins += mins;
+          }
+        }
+      }
+
+      // 2. Render multi-color progress bar
+      const bar = document.getElementById('subjectProgressBar');
+      bar.innerHTML = '';
+      if (grandTotalMins === 0) {
+        bar.innerHTML = '<div class="subject-progress-segment" style="width: 100%; background: var(--bg-subtle);"></div>';
+      } else {
+        subjects.forEach(sub => {
+          const mins = subjectTotals[sub.id] || 0;
+          if (mins > 0) {
+            const pct = (mins / grandTotalMins) * 100;
+            const seg = document.createElement('div');
+            seg.className = 'subject-progress-segment';
+            seg.style.width = `${pct}%`;
+            seg.style.backgroundColor = sub.color;
+            seg.title = `${sub.name}: ${(mins/60).toFixed(1)} hrs (${Math.round(pct)}%)`;
+            bar.appendChild(seg);
+          }
+        });
+      }
+
+      // 3. Render Subject Filter Pills
+      const pillsContainer = document.getElementById('subjectPillsRow');
+      pillsContainer.innerHTML = '';
+
+      // "All Subjects" pill
+      const allPill = document.createElement('div');
+      allPill.className = 'subject-filter-pill' + (activeFilterSubject === 'all' ? ' active' : '');
+      allPill.innerHTML = `
+        <span class="subject-dot" style="background-color: var(--accent-green); box-shadow: 0 0 6px var(--accent-green);"></span>
+        <span>All Subjects</span>
+        <span style="font-size: 0.72rem; color: var(--text-muted);">(${(grandTotalMins/60).toFixed(1)}h)</span>
+      `;
+      allPill.onclick = () => setSubjectFilter('all');
+      pillsContainer.appendChild(allPill);
+
+      // Pills for each subject
+      subjects.forEach(sub => {
+        const mins = subjectTotals[sub.id] || 0;
+        const pill = document.createElement('div');
+        pill.className = 'subject-filter-pill' + (activeFilterSubject === sub.id ? ' active' : '');
+        if (activeFilterSubject === sub.id) {
+          pill.style.borderColor = sub.color;
+          pill.style.background = hexToRgba(sub.color, 0.15);
+        }
+        pill.innerHTML = `
+          <span class="subject-dot" style="background-color: ${sub.color}; box-shadow: 0 0 6px ${sub.color};"></span>
+          <span>${sub.name}</span>
+          <span style="font-size: 0.72rem; color: var(--text-muted);">(${(mins/60).toFixed(1)}h)</span>
+        `;
+        pill.onclick = () => setSubjectFilter(sub.id);
+        pillsContainer.appendChild(pill);
+      });
+
+      // 4. Update dropdowns in Timer and Manual Drawer
+      updateSubjectDropdowns();
+    }
+
+    function updateSubjectDropdowns() {
+      const timerSelect = document.getElementById('timerSubjectSelect');
+      const manualSelect = document.getElementById('manualSubjectSelect');
+      
+      const prevTimerVal = timerSelect.value || activeSubjectId;
+      const prevManualVal = manualSelect.value || activeSubjectId;
+
+      timerSelect.innerHTML = '';
+      manualSelect.innerHTML = '';
+
+      subjects.forEach(sub => {
+        const opt1 = document.createElement('option');
+        opt1.value = sub.id;
+        opt1.textContent = sub.name;
+        timerSelect.appendChild(opt1);
+
+        const opt2 = document.createElement('option');
+        opt2.value = sub.id;
+        opt2.textContent = sub.name;
+        manualSelect.appendChild(opt2);
+      });
+
+      // Restore or set default
+      timerSelect.value = subjects.some(s => s.id === prevTimerVal) ? prevTimerVal : subjects[0].id;
+      manualSelect.value = subjects.some(s => s.id === prevManualVal) ? prevManualVal : subjects[0].id;
+
+      activeSubjectId = timerSelect.value;
+      updateSubjectColorDots();
+    }
+
+    function updateSubjectColorDots() {
+      const subTimer = getSubjectById(document.getElementById('timerSubjectSelect').value);
+      const subManual = getSubjectById(document.getElementById('manualSubjectSelect').value);
+
+      const dotTimer = document.getElementById('timerSubjectDot');
+      if (dotTimer) {
+        dotTimer.style.backgroundColor = subTimer.color;
+        dotTimer.style.boxShadow = `0 0 6px ${subTimer.color}`;
+      }
+
+      const dotManual = document.getElementById('manualSubjectDot');
+      if (dotManual) {
+        dotManual.style.backgroundColor = subManual.color;
+        dotManual.style.boxShadow = `0 0 6px ${subManual.color}`;
+      }
+    }
+
+    function onTimerSubjectChange() {
+      activeSubjectId = document.getElementById('timerSubjectSelect').value;
+      updateSubjectColorDots();
+      const sub = getSubjectById(activeSubjectId);
+      showToast(`Selected subject: ${sub.name}`);
+    }
+
+    function onManualSubjectChange() {
+      updateSubjectColorDots();
+    }
+
+    function setSubjectFilter(subId) {
+      activeFilterSubject = subId;
+      renderSubjectBreakdown();
+      renderHeatmap();
+      if (subId === 'all') {
+        document.getElementById('heatmapSubtitle').textContent = "Tracking daily focus duration across all subjects";
+        showToast("Heatmap: Showing all subjects");
+      } else {
+        const sub = getSubjectById(subId);
+        document.getElementById('heatmapSubtitle').textContent = `Filtering heatmap by ${sub.name} only`;
+        showToast(`Heatmap filtered by: ${sub.name}`);
+      }
+    }
+
+    // ========================================================================
+    // SUBJECT MANAGEMENT MODAL
+    // ========================================================================
+    function openSubjectModal() {
+      document.getElementById('subjectModal').classList.add('open');
+      renderSubjectManageList();
+      renderColorSwatches();
+    }
+
+    function closeSubjectModal() {
+      document.getElementById('subjectModal').classList.remove('open');
+    }
+
+    function closeSubjectModalOnOverlay(e) {
+      if (e.target.id === 'subjectModal') {
+        closeSubjectModal();
+      }
+    }
+
+    function renderSubjectManageList() {
+      const list = document.getElementById('subjectManageList');
+      list.innerHTML = '';
+
+      // Compute total minutes per subject
+      const totals = {};
+      for (const dayVal of Object.values(studyData)) {
+        const day = normalizeDayData(dayVal);
+        for (const [subId, mins] of Object.entries(day.subjects)) {
+          totals[subId] = (totals[subId] || 0) + mins;
+        }
+      }
+
+      subjects.forEach(sub => {
+        const row = document.createElement('div');
+        row.className = 'subject-manage-item';
+        
+        const hrs = ((totals[sub.id] || 0) / 60).toFixed(1);
+        row.innerHTML = `
+          <div class="subject-manage-item-info">
+            <span class="subject-dot" style="background-color: ${sub.color}; box-shadow: 0 0 6px ${sub.color};"></span>
+            <span style="color: var(--text-primary);">${sub.name}</span>
+            <span class="subject-hours-badge">${hrs} hrs logged</span>
+          </div>
+          <div>
+            ${subjects.length > 1 ? `
+              <button class="btn btn-ghost btn-sm" onclick="deleteSubject('${sub.id}')" style="color: var(--accent-red); padding: 2px 8px;" title="Delete subject">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+              </button>
+            ` : ''}
+          </div>
+        `;
+        list.appendChild(row);
+      });
+    }
+
+    function renderColorSwatches() {
+      const grid = document.getElementById('colorSwatchesGrid');
+      const customWrap = grid.querySelector('.custom-color-picker-wrap');
+
+      // Clear existing buttons except custom picker
+      grid.querySelectorAll('.color-swatch-btn').forEach(b => b.remove());
+
+      PRESET_COLORS.forEach(c => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'color-swatch-btn' + (c === selectedNewSubjectColor ? ' selected' : '');
+        btn.style.backgroundColor = c;
+        btn.onclick = () => selectColorSwatch(c);
+        grid.insertBefore(btn, customWrap);
+      });
+
+      document.getElementById('customColorInput').value = selectedNewSubjectColor;
+    }
+
+    function selectColorSwatch(color) {
+      selectedNewSubjectColor = color;
+      renderColorSwatches();
+    }
+
+    function onCustomColorPick(e) {
+      selectedNewSubjectColor = e.target.value;
+      // Deselect all presets
+      document.querySelectorAll('.color-swatch-btn').forEach(b => b.classList.remove('selected'));
+    }
+
+    async function createNewSubject() {
+      const nameInput = document.getElementById('newSubjectName');
+      const name = nameInput.value.trim();
+
+      if (!name) {
+        showToast("Please enter a subject name", true);
+        return;
+      }
+
+      // Generate clean ID
+      const safeId = name.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_' + Date.now().toString(36);
+      const newSub = {
+        id: safeId,
+        name: name,
+        color: selectedNewSubjectColor
+      };
+
+      subjects.push(newSub);
+      await StorageAdapter.saveSubjects(subjects);
+      activeSubjectId = safeId;
+
+      nameInput.value = '';
+      renderSubjectManageList();
+      renderSubjectBreakdown();
+      renderHeatmap();
+      showToast(`Created subject: ${name}`);
+    }
+
+    async function deleteSubject(id) {
+      if (subjects.length <= 1) {
+        showToast("At least one subject is required", true);
+        return;
+      }
+
+      const target = getSubjectById(id);
+      if (!confirm(`Delete subject "${target.name}"? (Past study time will remain in your overall totals)`)) {
+        return;
+      }
+
+      subjects = subjects.filter(s => s.id !== id);
+      await StorageAdapter.saveSubjects(subjects);
+
+      if (activeSubjectId === id) activeSubjectId = subjects[0].id;
+      if (activeFilterSubject === id) activeFilterSubject = 'all';
+
+      renderSubjectManageList();
+      renderSubjectBreakdown();
+      renderHeatmap();
+      showToast(`Deleted subject: ${target.name}`);
+    }
+
+    // ========================================================================
+    // STOPWATCH & STUDY TIMER LOGIC
+    // ========================================================================
+    function formatTime(totalSecs) {
+      const h = Math.floor(totalSecs / 3600);
+      const m = Math.floor((totalSecs % 3600) / 60);
+      const s = totalSecs % 60;
+      return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    function calculateCurrentSeconds() {
+      let total = accumulatedSeconds;
+      if (timerState === 'running' && timerStartTime) {
+        total += Math.floor((Date.now() - timerStartTime) / 1000);
+      }
+      return total;
+    }
+
+    function updateTimerUI() {
+      const currentSeconds = calculateCurrentSeconds();
+      const formatted = formatTime(currentSeconds);
+      timeDisplay.textContent = formatted;
+
+      const currentSub = getSubjectById(activeSubjectId);
+
+      // Update browser tab title with active timer and subject
+      if (timerState === 'running') {
+        document.title = `(${formatted}) ${currentSub.name} • Study Tracker`;
+      } else if (timerState === 'paused') {
+        document.title = `(Paused) Study Tracker`;
+      } else {
+        document.title = `Study Tracker`;
+      }
+    }
+
+    function persistTimerState() {
+      const stateObj = {
+        timerState,
+        timerStartTime,
+        accumulatedSeconds,
+        activeSubjectId,
+        timestamp: Date.now()
+      };
+      localStorage.setItem(STORAGE_KEY_TIMER, JSON.stringify(stateObj));
+    }
+
+    function restoreTimerState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY_TIMER);
+        if (!raw) return;
+        const saved = JSON.parse(raw);
+
+        if (saved.activeSubjectId && subjects.some(s => s.id === saved.activeSubjectId)) {
+          activeSubjectId = saved.activeSubjectId;
+          document.getElementById('timerSubjectSelect').value = activeSubjectId;
+          updateSubjectColorDots();
+        }
+
+        if (saved.timerState === 'running') {
+          timerState = 'running';
+          timerStartTime = saved.timerStartTime;
+          accumulatedSeconds = saved.accumulatedSeconds || 0;
+          
+          timerSection.classList.add('timer-running');
+          timerPill.className = 'timer-pill running';
+          timerPill.innerHTML = '<span>Focusing...</span>';
+          
+          btnToggle.innerHTML = `
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <rect x="6" y="4" width="4" height="16"></rect>
+              <rect x="14" y="4" width="4" height="16"></rect>
+            </svg>
+            Pause Session
+          `;
+          btnToggle.className = 'btn btn-secondary';
+          btnEnd.disabled = false;
+          btnReset.disabled = false;
+          
+          timerInterval = setInterval(updateTimerUI, 500);
+        } else if (saved.timerState === 'paused') {
+          timerState = 'paused';
+          accumulatedSeconds = saved.accumulatedSeconds || 0;
+          timerStartTime = null;
+
+          timerSection.classList.remove('timer-running');
+          timerPill.className = 'timer-pill paused';
+          timerPill.innerHTML = '<span>Session Paused</span>';
+
+          btnToggle.innerHTML = `
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+            Resume Session
+          `;
+          btnToggle.className = 'btn btn-primary';
+          btnEnd.disabled = false;
+          btnReset.disabled = false;
+        }
+        updateTimerUI();
+      } catch (e) {
+        console.warn("Could not restore timer state", e);
+      }
+    }
+
+    function toggleTimer() {
+      if (timerState === 'idle' || timerState === 'paused') {
+        timerStartTime = Date.now();
+        timerState = 'running';
+        if (timerInterval) clearInterval(timerInterval);
+        timerInterval = setInterval(updateTimerUI, 500);
+
+        timerSection.classList.add('timer-running');
+        timerPill.className = 'timer-pill running';
+        timerPill.innerHTML = '<span>Focusing...</span>';
+
+        btnToggle.innerHTML = `
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <rect x="6" y="4" width="4" height="16"></rect>
+            <rect x="14" y="4" width="4" height="16"></rect>
+          </svg>
+          Pause Session
+        `;
+        btnToggle.className = 'btn btn-secondary';
+        btnEnd.disabled = false;
+        btnReset.disabled = false;
+      } else if (timerState === 'running') {
+        accumulatedSeconds += Math.floor((Date.now() - timerStartTime) / 1000);
+        timerStartTime = null;
+        timerState = 'paused';
+        if (timerInterval) clearInterval(timerInterval);
+
+        timerSection.classList.remove('timer-running');
+        timerPill.className = 'timer-pill paused';
+        timerPill.innerHTML = '<span>Session Paused</span>';
+
+        btnToggle.innerHTML = `
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+          Resume Session
+        `;
+        btnToggle.className = 'btn btn-primary';
+      }
+
+      updateTimerUI();
+      persistTimerState();
+    }
+
+    function resetTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerState = 'idle';
+      timerStartTime = null;
+      accumulatedSeconds = 0;
+
+      timerSection.classList.remove('timer-running');
+      timerPill.className = 'timer-pill';
+      timerPill.innerHTML = '<span>Session Idle</span>';
+
+      btnToggle.innerHTML = `
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <polygon points="5 3 19 12 5 21 5 3"></polygon>
+        </svg>
+        Start Session
+      `;
+      btnToggle.className = 'btn btn-primary';
+      btnEnd.disabled = true;
+      btnReset.disabled = true;
+
+      updateTimerUI();
+      localStorage.removeItem(STORAGE_KEY_TIMER);
+    }
+
+    async function endSession() {
+      const finalSecs = calculateCurrentSeconds();
+      let minutes = Math.round(finalSecs / 60);
+      if (minutes === 0 && finalSecs >= 15) {
+        minutes = 1;
+      }
+
+      if (minutes <= 0) {
+        showToast("Session too short to log (<15 seconds)", true);
+        resetTimer();
+        return;
+      }
+
+      btnEnd.disabled = true;
+      btnToggle.disabled = true;
+
+      try {
+        const sub = getSubjectById(activeSubjectId);
+        studyData = await StorageAdapter.saveSession(todayDateStr, minutes, activeSubjectId);
+        renderHeatmap();
+        updateMetrics();
+        renderSubjectBreakdown();
+        showToast(`🎉 Logged ${minutes}m in ${sub.name}!`);
+      } catch (err) {
+        console.error("Save error:", err);
+        showToast("Failed to save session", true);
+      } finally {
+        resetTimer();
+      }
+    }
+
+    async function logManualEntry() {
+      const dateInput = document.getElementById('manualDate').value;
+      const minsInput = parseInt(document.getElementById('manualMinutes').value, 10);
+      const subId = document.getElementById('manualSubjectSelect').value || activeSubjectId;
+
+      if (!dateInput || isNaN(minsInput) || minsInput <= 0) {
+        showToast("Please enter a valid date and minutes (>0)", true);
+        return;
+      }
+
+      try {
+        const sub = getSubjectById(subId);
+        studyData = await StorageAdapter.saveSession(dateInput, minsInput, subId);
+        renderHeatmap();
+        updateMetrics();
+        renderSubjectBreakdown();
+        showToast(`Added ${minsInput} mins to ${sub.name} on ${dateInput}`);
+        document.getElementById('manualMinutes').value = '';
+      } catch (err) {
+        showToast("Error saving manual session", true);
+      }
+    }
+
+    // ========================================================================
+    // 52-WEEK GITHUB-STYLE HEATMAP GENERATOR
+    // ========================================================================
+    function getHeatLevel(minutes) {
+      if (!minutes || minutes <= 0) return 0;
+      if (minutes <= 30) return 1;
+      if (minutes <= 60) return 2;
+      if (minutes <= 120) return 3;
+      return 4;
+    }
+
+    function renderHeatmap() {
+      heatmapGrid.innerHTML = '';
+      monthsHeader.innerHTML = '<span></span>';
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const currentDayIndex = (today.getDay() + 6) % 7; 
+      const totalDaysToRender = (52 * 7) + currentDayIndex + 1;
+      
+      const startDate = new Date(today);
+      startDate.setDate(today.getDate() - totalDaysToRender + 1);
+
+      while (((startDate.getDay() + 6) % 7) !== 0) {
+        startDate.setDate(startDate.getDate() - 1);
+      }
+
+      let iter = new Date(startDate);
+      let dayCounter = 0;
+      let lastMonth = -1;
+      let monthLabels = [];
+
+      while (iter <= today || ((iter.getDay() + 6) % 7) !== 0) {
+        const weekCol = Math.floor(dayCounter / 7);
+        const dayRow = (iter.getDay() + 6) % 7;
+
+        if (dayRow === 0) {
+          const m = iter.getMonth();
+          if (m !== lastMonth) {
+            monthLabels.push({
+              col: weekCol,
+              name: iter.toLocaleDateString(undefined, { month: 'short' })
+            });
+            lastMonth = m;
+          }
+        }
+
+        const dateStr = getLocalDateString(iter);
+        const isFuture = iter > today;
+        const day = normalizeDayData(studyData[dateStr]);
+
+        let minutes = 0;
+        if (!isFuture) {
+          if (activeFilterSubject === 'all') {
+            minutes = day.total;
+          } else {
+            minutes = day.subjects[activeFilterSubject] || 0;
+          }
+        }
+
+        const level = isFuture ? 0 : getHeatLevel(minutes);
+
+        const cell = document.createElement('div');
+        cell.className = 'heat-cell' + (isFuture ? ' future' : '');
+        cell.setAttribute('data-level', level);
+        cell.setAttribute('data-date', dateStr);
+        cell.setAttribute('data-minutes', minutes);
+
+        // Subject-customized shading when filtered!
+        if (!isFuture && activeFilterSubject !== 'all' && level > 0) {
+          const sub = getSubjectById(activeFilterSubject);
+          const opacities = [0, 0.35, 0.55, 0.8, 1.0];
+          cell.style.backgroundColor = hexToRgba(sub.color, opacities[level]);
+          cell.style.outlineColor = 'transparent';
+        } else {
+          cell.style.backgroundColor = '';
+          cell.style.outlineColor = '';
+        }
+
+        if (!isFuture) {
+          cell.addEventListener('mouseenter', handleCellHover);
+          cell.addEventListener('mouseleave', handleCellLeave);
+          cell.addEventListener('click', (e) => {
+            handleCellHover(e);
+            document.getElementById('manualDate').value = dateStr;
+            showToast(`Selected date: ${dateStr}`);
+          });
+        }
+
+        heatmapGrid.appendChild(cell);
+
+        iter.setDate(iter.getDate() + 1);
+        dayCounter++;
+        if (dayCounter > 54 * 7) break;
+      }
+
+      const totalColumns = Math.ceil(dayCounter / 7);
+      monthsHeader.style.gridTemplateColumns = `32px repeat(${totalColumns}, 11px)`;
+      heatmapGrid.style.gridTemplateColumns = `repeat(${totalColumns}, 11px)`;
+
+      monthLabels.forEach((ml, idx) => {
+        if (idx > 0 && (ml.col - monthLabels[idx - 1].col) < 3) return;
+        const labelSpan = document.createElement('span');
+        labelSpan.textContent = ml.name;
+        labelSpan.style.gridColumnStart = ml.col + 2;
+        monthsHeader.appendChild(labelSpan);
+      });
+
+      // Update Summary Info
+      let totalMins = 0;
+      let activeDays = 0;
+      Object.values(studyData).forEach(dayVal => {
+        const d = normalizeDayData(dayVal);
+        const m = activeFilterSubject === 'all' ? d.total : (d.subjects[activeFilterSubject] || 0);
+        if (m > 0) {
+          totalMins += m;
+          activeDays++;
+        }
+      });
+
+      const filterSubName = activeFilterSubject === 'all' ? "all subjects" : getSubjectById(activeFilterSubject).name;
+      document.getElementById('heatmapStatsSummary').textContent = 
+        `${totalMins} total minutes logged for ${filterSubName} across ${activeDays} active days in past year`;
+    }
+
+    // Heatmap Tooltip Handlers with Subject Breakdown
+    function handleCellHover(e) {
+      const cell = e.currentTarget || e.target;
+      const dateStr = cell.getAttribute('data-date');
+      if (!dateStr) return;
+      
+      const day = normalizeDayData(studyData[dateStr]);
+      const dateObj = new Date(dateStr + 'T00:00:00');
+      const formattedDate = dateObj.toLocaleDateString(undefined, {
+        weekday: 'short', month: 'short', day: 'numeric', year: 'numeric'
+      });
+
+      let minutes = activeFilterSubject === 'all' ? day.total : (day.subjects[activeFilterSubject] || 0);
+
+      let timeText = minutes === 0 
+        ? "No study time" 
+        : minutes < 60 
+          ? `<strong>${minutes} mins</strong>` 
+          : `<strong>${Math.floor(minutes/60)}h ${minutes%60}m</strong> (${minutes} mins)`;
+
+      let html = `<div class="tooltip-header">${timeText} on ${formattedDate}</div>`;
+
+      // Render per-subject breakdown rows
+      const activeSubjectsInDay = Object.entries(day.subjects).filter(([_, m]) => m > 0);
+      if (activeSubjectsInDay.length > 0) {
+        html += '<div class="tooltip-breakdown">';
+        activeSubjectsInDay.forEach(([subId, subMins]) => {
+          const sub = getSubjectById(subId);
+          const isTarget = activeFilterSubject === subId;
+          html += `
+            <div class="tooltip-subject-row" style="${isTarget ? 'font-weight: 700;' : ''}">
+              <span class="subject-dot" style="background-color: ${sub.color}; box-shadow: 0 0 4px ${sub.color};"></span>
+              <span style="color: #c9d1d9;">${sub.name}:</span>
+              <span style="color: #fff; margin-left: auto;">${subMins}m</span>
+            </div>
+          `;
+        });
+        html += '</div>';
+      }
+
+      tooltip.innerHTML = html;
+
+      const rect = cell.getBoundingClientRect();
+      const cellCenterX = rect.left + (rect.width / 2);
+
+      const spaceAbove = rect.top;
+      const showBelow = spaceAbove < 75;
+
+      if (showBelow) {
+        tooltip.classList.add('flipped');
+        tooltip.style.top = `${rect.bottom + 8}px`;
+        tooltip.style.transform = 'translate(-50%, 0)';
+      } else {
+        tooltip.classList.remove('flipped');
+        tooltip.style.top = `${rect.top - 8}px`;
+        tooltip.style.transform = 'translate(-50%, -100%)';
+      }
+
+      const minX = 100;
+      const maxX = window.innerWidth - 100;
+      const clampedX = Math.max(minX, Math.min(maxX, cellCenterX));
+
+      tooltip.style.left = `${clampedX}px`;
+      tooltip.style.opacity = '1';
+    }
+
+    function handleCellLeave() {
+      tooltip.style.opacity = '0';
+    }
+
+    // ========================================================================
+    // SUMMARY STATS CALCULATION
+    // ========================================================================
+    function updateMetrics() {
+      // 1. Today's Minutes
+      const todayRecord = normalizeDayData(studyData[todayDateStr]);
+      const todayMins = todayRecord.total;
+      if (todayMins >= 60) {
+        document.getElementById('metricToday').textContent = `${Math.floor(todayMins/60)}h ${todayMins%60}m`;
+      } else {
+        document.getElementById('metricToday').textContent = `${todayMins}m`;
+      }
+
+      // 2. Current Daily Streak
+      let streak = 0;
+      let checkDate = new Date();
+      checkDate.setHours(0, 0, 0, 0);
+
+      let key = getLocalDateString(checkDate);
+      let dayRec = normalizeDayData(studyData[key]);
+
+      if (dayRec.total === 0) {
+        checkDate.setDate(checkDate.getDate() - 1);
+        key = getLocalDateString(checkDate);
+        dayRec = normalizeDayData(studyData[key]);
+      }
+
+      while (dayRec.total > 0) {
+        streak++;
+        checkDate.setDate(checkDate.getDate() - 1);
+        key = getLocalDateString(checkDate);
+        dayRec = normalizeDayData(studyData[key]);
+      }
+      document.getElementById('metricStreak').textContent = `${streak} ${streak === 1 ? 'day' : 'days'}`;
+
+      // 3. Total Recorded Hours & Active Days
+      let totalMins = 0;
+      let activeDays = 0;
+      for (const dayVal of Object.values(studyData)) {
+        const d = normalizeDayData(dayVal);
+        if (d.total > 0) {
+          totalMins += d.total;
+          activeDays++;
+        }
+      }
+      const totalHours = (totalMins / 60).toFixed(1);
+      document.getElementById('metricTotal').textContent = `${totalHours} hrs`;
+      document.getElementById('metricActiveDays').textContent = `${activeDays} active days recorded`;
+    }
+
+    // ========================================================================
+    // BACKUP: IMPORT / EXPORT & DEMO DATA
+    // ========================================================================
+    function exportBackup() {
+      const backupPayload = {
+        version: 2,
+        exportedAt: new Date().toISOString(),
+        subjects: subjects,
+        data: studyData
+      };
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupPayload, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `study-tracker-backup-${todayDateStr}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast("Backup JSON exported successfully!");
+    }
+
+    function triggerImport() {
+      document.getElementById('importFileInput').click();
+    }
+
+    function handleFileImport(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = async function(e) {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          if (typeof parsed !== 'object' || parsed === null) {
+            throw new Error("Invalid format");
+          }
+
+          let incomingData = parsed.data || parsed;
+          let incomingSubjects = parsed.subjects || [];
+
+          // Merge subjects if provided
+          if (Array.isArray(incomingSubjects) && incomingSubjects.length > 0) {
+            incomingSubjects.forEach(newSub => {
+              if (!subjects.some(s => s.id === newSub.id)) {
+                subjects.push(newSub);
+              }
+            });
+            await StorageAdapter.saveSubjects(subjects);
+          }
+
+          // Merge data
+          let merged = { ...studyData };
+          for (const [k, v] of Object.entries(incomingData)) {
+            if (/^\d{4}-\d{2}-\d{2}$/.test(k)) {
+              const currentDay = normalizeDayData(merged[k]);
+              const incomingDay = normalizeDayData(v);
+              
+              currentDay.total = Math.max(currentDay.total, incomingDay.total);
+              for (const [subId, mins] of Object.entries(incomingDay.subjects)) {
+                currentDay.subjects[subId] = Math.max(currentDay.subjects[subId] || 0, mins);
+              }
+              merged[k] = currentDay;
+            }
+          }
+
+          studyData = await StorageAdapter.replaceAllData(merged);
+          renderSubjectBreakdown();
+          renderHeatmap();
+          updateMetrics();
+          showToast("Backup imported successfully!");
+        } catch (err) {
+          alert("Error importing file: Make sure it is a valid Study Tracker JSON backup.");
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = "";
+    }
+
+    async function seedDemoData() {
+      if (!confirm("Populate realistic sample study data for the past 90 days across your subjects? (Your current data will be preserved and merged)")) {
+        return;
+      }
+      const d = new Date();
+      let sample = { ...studyData };
+
+      for (let i = 0; i < 90; i++) {
+        if (Math.random() > 0.3) {
+          const dateStr = getLocalDateString(d);
+          const currentDay = normalizeDayData(sample[dateStr]);
+
+          // Pick 1 to 2 random subjects
+          const numSubs = Math.random() > 0.6 ? 2 : 1;
+          const shuffled = [...subjects].sort(() => 0.5 - Math.random());
+
+          for (let s = 0; s < numSubs; s++) {
+            const sub = shuffled[s];
+            const randMins = [25, 40, 60, 90, 120][Math.floor(Math.random() * 5)];
+            currentDay.subjects[sub.id] = (currentDay.subjects[sub.id] || 0) + randMins;
+            currentDay.total += randMins;
+          }
+
+          sample[dateStr] = currentDay;
+        }
+        d.setDate(d.getDate() - 1);
+      }
+
+      studyData = await StorageAdapter.replaceAllData(sample);
+      renderSubjectBreakdown();
+      renderHeatmap();
+      updateMetrics();
+      showToast("🎲 Multi-subject demo activity generated!");
+    }
+
+    async function clearAllData() {
+      if (!confirm("Are you sure you want to clear all logged study data? This cannot be undone.")) return;
+      studyData = await StorageAdapter.replaceAllData({});
+      resetTimer();
+      renderSubjectBreakdown();
+      renderHeatmap();
+      updateMetrics();
+      showToast("All study logs cleared");
+    }
+
+    function showToast(message, isError = false) {
+      toastMsg.textContent = message;
+      toast.style.borderColor = isError ? 'var(--accent-red)' : 'var(--accent-green)';
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3200);
+    }
+
+    // ========================================================================
+    // INITIALIZATION
+    // ========================================================================
+    async function initApp() {
+      initDates();
+      subjects = await StorageAdapter.loadSubjects();
+      studyData = await StorageAdapter.loadData();
+      renderSubjectBreakdown();
+      restoreTimerState();
+      renderHeatmap();
+      updateMetrics();
+
+      // Dismiss floating tooltip smoothly if user scrolls or taps outside on tablets
+      window.addEventListener('scroll', handleCellLeave, { passive: true });
+      document.querySelector('.heatmap-scroll-container')?.addEventListener('scroll', handleCellLeave, { passive: true });
+      document.addEventListener('touchstart', (e) => {
+        if (!e.target.closest('.heat-cell')) {
+          handleCellLeave();
+        }
+      }, { passive: true });
+    }
+
+    initApp();
+  </script>
+</body>
+</html>
