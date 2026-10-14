@@ -14,6 +14,10 @@
   <meta name="apple-mobile-web-app-title" content="Study Tracker">
   <meta name="theme-color" content="#0d1117">
 
+  <!-- Firebase App & Firestore Compat SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
   <style>
     /* ==========================================================================
        GitHub Dark Mode Theme Tokens
@@ -1259,18 +1263,49 @@
     // ========================================================================
     // STORAGE ADAPTER (Clean abstraction for LocalStorage vs. Firebase)
     // ========================================================================
-    const USE_FIREBASE = false;
+    // ========================================================================
+    // FIREBASE CLOUD CONFIGURATION & REAL-TIME SYNC
+    // ========================================================================
+    const USE_FIREBASE = true;
+
     const FIREBASE_CONFIG = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT.firebaseapp.com",
-      projectId: "YOUR_PROJECT",
-      storageBucket: "YOUR_PROJECT.appspot.com",
-      messagingSenderId: "...",
-      appId: "..."
+      apiKey: "AIzaSyCrS7IW5Jd8S8ABGjTdIAhS16hmCpQLVeU",
+      authDomain: "website-study-8b62b.firebaseapp.com",
+      projectId: "website-study-8b62b",
+      storageBucket: "website-study-8b62b.firebasestorage.app",
+      messagingSenderId: "898324107889",
+      appId: "1:898324107889:web:837613357b85c9271701d0"
     };
+
+    let db = null;
+    if (USE_FIREBASE && window.firebase) {
+      try {
+        firebase.initializeApp(FIREBASE_CONFIG);
+        db = firebase.firestore();
+        db.enablePersistence().catch(err => {
+          if (err.code === 'failed-precondition') {
+            console.warn("Firestore persistence active in another tab.");
+          } else if (err.code === 'unimplemented') {
+            console.warn("Browser does not support offline persistence.");
+          }
+        });
+      } catch (err) {
+        console.error("Firebase initialization failed:", err);
+      }
+    }
 
     const StorageAdapter = {
       async loadSubjects() {
+        if (USE_FIREBASE && db) {
+          try {
+            const doc = await db.collection("study_tracker").doc("user_history").get();
+            if (doc.exists && Array.isArray(doc.data().subjects) && doc.data().subjects.length > 0) {
+              return doc.data().subjects;
+            }
+          } catch (e) {
+            console.warn("Could not load subjects from Firebase, trying localStorage", e);
+          }
+        }
         try {
           const raw = localStorage.getItem(STORAGE_KEY_SUBJECTS);
           if (raw) {
@@ -1285,14 +1320,41 @@
 
       async saveSubjects(newSubjects) {
         localStorage.setItem(STORAGE_KEY_SUBJECTS, JSON.stringify(newSubjects));
+        if (USE_FIREBASE && db) {
+          try {
+            await db.collection("study_tracker").doc("user_history").set({
+              subjects: newSubjects
+            }, { merge: true });
+          } catch (e) {
+            console.error("Failed to sync subjects to Firebase", e);
+          }
+        }
         return newSubjects;
       },
 
       async loadData() {
-        if (USE_FIREBASE && window.firebase) {
-          const db = firebase.firestore();
-          const doc = await db.collection("study_tracker").doc("user_history").get();
-          return doc.exists ? doc.data().history || {} : {};
+        if (USE_FIREBASE && db) {
+          try {
+            const doc = await db.collection("study_tracker").doc("user_history").get();
+            if (doc.exists && doc.data().history) {
+              return doc.data().history;
+            } else {
+              // Auto-migrate any existing local study logs up to Firestore!
+              const localRaw = localStorage.getItem(STORAGE_KEY_DATA);
+              const localData = localRaw ? JSON.parse(localRaw) : {};
+              const localSubs = (typeof subjects !== 'undefined' && subjects.length > 0) ? subjects : DEFAULT_SUBJECTS;
+              if (Object.keys(localData).length > 0) {
+                await db.collection("study_tracker").doc("user_history").set({
+                  history: localData,
+                  subjects: localSubs,
+                  lastUpdated: new Date().toISOString()
+                }, { merge: true });
+              }
+              return localData;
+            }
+          } catch (e) {
+            console.warn("Could not load data from Firebase, trying localStorage", e);
+          }
         }
         try {
           const raw = localStorage.getItem(STORAGE_KEY_DATA);
@@ -1310,21 +1372,34 @@
         day.subjects[subjectId] = (day.subjects[subjectId] || 0) + addedMinutes;
         current[dateStr] = day;
 
-        if (USE_FIREBASE && window.firebase) {
-          const db = firebase.firestore();
-          await db.collection("study_tracker").doc("user_history").set({ history: current }, { merge: true });
-        } else {
-          localStorage.setItem(STORAGE_KEY_DATA, JSON.stringify(current));
+        localStorage.setItem(STORAGE_KEY_DATA, JSON.stringify(current));
+
+        if (USE_FIREBASE && db) {
+          try {
+            await db.collection("study_tracker").doc("user_history").set({
+              history: current,
+              subjects: subjects,
+              lastUpdated: new Date().toISOString()
+            }, { merge: true });
+          } catch (e) {
+            console.error("Firebase saveSession error:", e);
+          }
         }
         return current;
       },
 
       async replaceAllData(newData) {
-        if (USE_FIREBASE && window.firebase) {
-          const db = firebase.firestore();
-          await db.collection("study_tracker").doc("user_history").set({ history: newData });
-        } else {
-          localStorage.setItem(STORAGE_KEY_DATA, JSON.stringify(newData));
+        localStorage.setItem(STORAGE_KEY_DATA, JSON.stringify(newData));
+        if (USE_FIREBASE && db) {
+          try {
+            await db.collection("study_tracker").doc("user_history").set({
+              history: newData,
+              subjects: subjects,
+              lastUpdated: new Date().toISOString()
+            }, { merge: true });
+          } catch (e) {
+            console.error("Firebase replaceAllData error:", e);
+          }
         }
         return newData;
       }
@@ -2291,6 +2366,44 @@
       setTimeout(() => toast.classList.remove('show'), 3200);
     }
 
+    function setupRealtimeCloudSync() {
+      if (!USE_FIREBASE || !db) {
+        document.getElementById('storageModeLabel').textContent = "localStorage";
+        return;
+      }
+
+      document.getElementById('storageModeLabel').textContent = "Cloud Synced (Firebase)";
+      const dot = document.querySelector('.status-dot');
+      if (dot) dot.style.boxShadow = "0 0 10px #39d353";
+
+      // Subscribe to real-time updates across all devices (Mac, tablet, phone, ESP32)
+      db.collection("study_tracker").doc("user_history").onSnapshot(doc => {
+        if (!doc.exists) return;
+        const cloudData = doc.data();
+        let changed = false;
+
+        if (cloudData.history) {
+          studyData = cloudData.history;
+          localStorage.setItem(STORAGE_KEY_DATA, JSON.stringify(studyData));
+          changed = true;
+        }
+
+        if (Array.isArray(cloudData.subjects) && cloudData.subjects.length > 0) {
+          subjects = cloudData.subjects;
+          localStorage.setItem(STORAGE_KEY_SUBJECTS, JSON.stringify(subjects));
+          changed = true;
+        }
+
+        if (changed) {
+          renderSubjectBreakdown();
+          renderHeatmap();
+          updateMetrics();
+        }
+      }, err => {
+        console.warn("Real-time listener warning:", err);
+      });
+    }
+
     // ========================================================================
     // INITIALIZATION
     // ========================================================================
@@ -2302,6 +2415,7 @@
       restoreTimerState();
       renderHeatmap();
       updateMetrics();
+      setupRealtimeCloudSync();
 
       // Dismiss floating tooltip smoothly if user scrolls or taps outside on tablets
       window.addEventListener('scroll', handleCellLeave, { passive: true });
