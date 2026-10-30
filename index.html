@@ -1632,7 +1632,8 @@
       { id: "mechanics", name: "Mechanics", color: "#f0883e" },
       { id: "english", name: "English", color: "#bc8cff" },
       { id: "economics", name: "Economics", color: "#ffd600" },
-      { id: "pure_math", name: "Pure Math", color: "#00e676" }
+      { id: "pure_math", name: "Pure Math", color: "#00e676" },
+      { id: "stats", name: "Stats", color: "#e040fb" }
     ];
 
     const PRESET_COLORS = [
@@ -1643,6 +1644,7 @@
       "#bc8cff", // English Purple
       "#ffd600", // Economics Gold
       "#00e676", // Pure Math Green
+      "#e040fb", // Stats Neon Magenta
       "#f85149"  // Crimson
     ];
 
@@ -1711,12 +1713,12 @@
           await StorageAdapter.saveSubjects(loaded);
         } else {
           // If the loaded subjects are the legacy placeholders without the user's subjects
-          const hasAnyUserSub = loaded.some(s => ["chem", "mechanics", "pure_math", "economics"].includes(s.id));
+          const hasAnyUserSub = loaded.some(s => ["chem", "mechanics", "pure_math", "economics", "stats"].includes(s.id));
           if (!hasAnyUserSub) {
             loaded = JSON.parse(JSON.stringify(DEFAULT_SUBJECTS));
             await StorageAdapter.saveSubjects(loaded);
           } else {
-            // Ensure all 7 user subjects are present in case only some were saved
+            // Ensure all 8 user subjects are present in case only some were saved
             let updated = false;
             DEFAULT_SUBJECTS.forEach(defSub => {
               if (!loaded.some(s => s.id === defSub.id || s.name.toLowerCase() === defSub.name.toLowerCase())) {
