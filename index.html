@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Study Tracker</title>
-  
+
   <!-- Favicon SVG -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%2339d353%22><circle cx=%2212%22 cy=%2212%22 r=%2210%22/><polyline points=%2212 6 12 12 16 14%22 fill=%22none%22 stroke=%22%230d1117%22 stroke-width=%222.5%22/></svg>">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%2339d353%22><circle cx=%2212%22 cy=%2212%22 r=%2210%22/><polyline points=%2212 6 12 12 16 14%22 fill=%22none%22 stroke=%22%230d1117%22 stroke-width=%222.5%22/></svg>">
 
   <!-- Mobile & Tablet PWA Meta Tags -->
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -31,7 +33,7 @@
       --text-primary: #f0f6fc;
       --text-secondary: #8b949e;
       --text-muted: #6e7681;
-      
+
       --accent-green: #238636;
       --accent-green-hover: #2ea043;
       --accent-green-glow: rgba(35, 134, 54, 0.4);
@@ -504,11 +506,29 @@
       z-index: 10;
     }
 
-    .heat-cell[data-level="0"] { background-color: var(--heat-0); }
-    .heat-cell[data-level="1"] { background-color: var(--heat-1); outline-color: rgba(255,255,255,0.03); }
-    .heat-cell[data-level="2"] { background-color: var(--heat-2); outline-color: rgba(255,255,255,0.05); }
-    .heat-cell[data-level="3"] { background-color: var(--heat-3); outline-color: rgba(255,255,255,0.08); }
-    .heat-cell[data-level="4"] { background-color: var(--heat-4); outline-color: rgba(255,255,255,0.1); }
+    .heat-cell[data-level="0"] {
+      background-color: var(--heat-0);
+    }
+
+    .heat-cell[data-level="1"] {
+      background-color: var(--heat-1);
+      outline-color: rgba(255, 255, 255, 0.03);
+    }
+
+    .heat-cell[data-level="2"] {
+      background-color: var(--heat-2);
+      outline-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .heat-cell[data-level="3"] {
+      background-color: var(--heat-3);
+      outline-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .heat-cell[data-level="4"] {
+      background-color: var(--heat-4);
+      outline-color: rgba(255, 255, 255, 0.1);
+    }
 
     .heat-cell.future {
       opacity: 0.15;
@@ -638,9 +658,11 @@
       justify-content: center;
       transition: border-color 0.2s ease;
     }
+
     .subject-picker-bar:hover {
       border-color: #8b949e;
     }
+
     .subject-picker-label {
       font-size: 0.78rem;
       color: var(--text-secondary);
@@ -648,11 +670,13 @@
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
+
     .subject-select-wrap {
       display: flex;
       align-items: center;
       gap: 8px;
     }
+
     .subject-dot {
       width: 10px;
       height: 10px;
@@ -662,6 +686,7 @@
       box-shadow: 0 0 6px currentColor;
       transition: background-color 0.2s ease, box-shadow 0.2s ease;
     }
+
     .subject-select {
       background: transparent;
       color: var(--text-primary);
@@ -672,6 +697,7 @@
       cursor: pointer;
       font-family: inherit;
     }
+
     .subject-select option {
       background: var(--bg-surface);
       color: var(--text-primary);
@@ -688,6 +714,7 @@
       flex-direction: column;
       gap: 14px;
     }
+
     .subject-breakdown-header {
       display: flex;
       justify-content: space-between;
@@ -695,6 +722,7 @@
       flex-wrap: wrap;
       gap: 10px;
     }
+
     .subject-breakdown-title {
       display: flex;
       align-items: center;
@@ -703,6 +731,7 @@
       font-weight: 600;
       color: var(--text-primary);
     }
+
     .subject-progress-bar {
       height: 10px;
       background: var(--bg-subtle);
@@ -711,16 +740,19 @@
       display: flex;
       width: 100%;
     }
+
     .subject-progress-segment {
       height: 100%;
       transition: width 0.3s ease;
     }
+
     .subject-pills-row {
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
       align-items: center;
     }
+
     .subject-filter-pill {
       display: inline-flex;
       align-items: center;
@@ -736,10 +768,12 @@
       transition: all 0.15s ease;
       user-select: none;
     }
+
     .subject-filter-pill:hover {
       border-color: #8b949e;
       color: var(--text-primary);
     }
+
     .subject-filter-pill.active {
       background: rgba(88, 166, 255, 0.12);
       border-color: var(--accent-blue);
@@ -751,6 +785,7 @@
     .tooltip-header {
       margin-bottom: 4px;
     }
+
     .tooltip-breakdown {
       margin-top: 6px;
       padding-top: 6px;
@@ -759,12 +794,14 @@
       flex-direction: column;
       gap: 3px;
     }
+
     .tooltip-subject-row {
       display: flex;
       align-items: center;
       gap: 6px;
       font-size: 0.72rem;
     }
+
     .tooltip-subject-row .subject-dot {
       width: 7px;
       height: 7px;
@@ -785,9 +822,11 @@
       z-index: 100000;
       padding: 16px;
     }
+
     .modal-overlay.open {
       display: flex;
     }
+
     .modal-content {
       background: var(--bg-surface);
       border: 1px solid var(--border-default);
@@ -800,6 +839,7 @@
       display: flex;
       flex-direction: column;
     }
+
     .modal-header {
       padding: 16px 20px;
       border-bottom: 1px solid var(--border-default);
@@ -807,10 +847,12 @@
       justify-content: space-between;
       align-items: center;
     }
+
     .modal-header h3 {
       font-size: 1.05rem;
       font-weight: 600;
     }
+
     .modal-close-btn {
       background: transparent;
       border: none;
@@ -820,13 +862,18 @@
       line-height: 1;
       padding: 4px;
     }
-    .modal-close-btn:hover { color: var(--text-primary); }
+
+    .modal-close-btn:hover {
+      color: var(--text-primary);
+    }
+
     .modal-body {
       padding: 18px 20px;
       display: flex;
       flex-direction: column;
       gap: 20px;
     }
+
     .subject-manage-list {
       display: flex;
       flex-direction: column;
@@ -834,6 +881,7 @@
       max-height: 220px;
       overflow-y: auto;
     }
+
     .subject-manage-item {
       display: flex;
       align-items: center;
@@ -843,6 +891,7 @@
       border: 1px solid var(--border-muted);
       border-radius: var(--radius-sm);
     }
+
     .subject-manage-item-info {
       display: flex;
       align-items: center;
@@ -850,11 +899,13 @@
       font-size: 0.88rem;
       font-weight: 500;
     }
+
     .subject-hours-badge {
       font-size: 0.75rem;
       color: var(--text-muted);
       margin-left: 6px;
     }
+
     .color-swatches-grid {
       display: flex;
       gap: 8px;
@@ -862,6 +913,7 @@
       flex-wrap: wrap;
       margin-top: 8px;
     }
+
     .color-swatch-btn {
       width: 26px;
       height: 26px;
@@ -870,20 +922,24 @@
       cursor: pointer;
       transition: transform 0.15s ease, border-color 0.15s ease;
     }
+
     .color-swatch-btn:hover {
       transform: scale(1.15);
     }
+
     .color-swatch-btn.selected {
       border-color: #fff;
       transform: scale(1.18);
       box-shadow: 0 0 8px currentColor;
     }
+
     .custom-color-picker-wrap {
       display: inline-flex;
       align-items: center;
       gap: 6px;
       margin-left: 4px;
     }
+
     .custom-color-input {
       appearance: none;
       border: 1px solid var(--border-default);
@@ -895,9 +951,11 @@
       padding: 0;
       outline: none;
     }
+
     .custom-color-input::-webkit-color-swatch-wrapper {
       padding: 0;
     }
+
     .custom-color-input::-webkit-color-swatch {
       border: none;
       border-radius: 50%;
@@ -928,14 +986,17 @@
       .stopwatch-display {
         font-size: 3.2rem;
       }
+
       .timer-controls .btn {
         width: 100%;
         justify-content: center;
       }
+
       header {
         flex-direction: column;
         align-items: flex-start;
       }
+
       .header-actions {
         width: 100%;
         justify-content: space-between;
@@ -943,6 +1004,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <div class="app-container">
@@ -965,7 +1027,8 @@
           <div class="status-dot"></div>
           <span id="storageModeLabel">localStorage</span>
         </div>
-        <button class="btn btn-secondary btn-sm" onclick="exportBackup()" title="Download a JSON backup of your study logs">
+        <button class="btn btn-secondary btn-sm" onclick="exportBackup()"
+          title="Download a JSON backup of your study logs">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
             <polyline points="7 10 12 15 17 10"></polyline>
@@ -982,7 +1045,8 @@
           Import
         </button>
         <!-- Hidden File Input for Import -->
-        <input type="file" id="importFileInput" accept=".json,application/json" style="display: none;" onchange="handleFileImport(event)">
+        <input type="file" id="importFileInput" accept=".json,application/json" style="display: none;"
+          onchange="handleFileImport(event)">
       </div>
     </header>
 
@@ -1003,7 +1067,9 @@
       <div class="metric-card">
         <div class="metric-title">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2c-.3 0-.6.1-.8.4-1.2 1.4-2.4 3-3.1 4.9C7.2 9.4 7 11.2 7 13c0 2.8 2.2 5 5 5s5-2.2 5-5c0-1.8-.2-3.6-1.1-5.7-.7-1.9-1.9-3.5-3.1-4.9-.2-.3-.5-.4-.8-.4z"></path>
+            <path
+              d="M12 2c-.3 0-.6.1-.8.4-1.2 1.4-2.4 3-3.1 4.9C7.2 9.4 7 11.2 7 13c0 2.8 2.2 5 5 5s5-2.2 5-5c0-1.8-.2-3.6-1.1-5.7-.7-1.9-1.9-3.5-3.1-4.9-.2-.3-.5-.4-.8-.4z">
+            </path>
           </svg>
           Current Daily Streak
         </div>
@@ -1038,7 +1104,8 @@
             <!-- Populated dynamically -->
           </select>
         </div>
-        <button class="btn btn-ghost btn-sm" onclick="openSubjectModal()" title="Manage or Add Subjects" style="padding: 2px 8px; font-size: 0.75rem;">
+        <button class="btn btn-ghost btn-sm" onclick="openSubjectModal()" title="Manage or Add Subjects"
+          style="padding: 2px 8px; font-size: 0.75rem;">
           ⚙️ Manage
         </button>
       </div>
@@ -1081,15 +1148,18 @@
       </summary>
       <div class="quick-log-form">
         <input type="date" id="manualDate" class="input-field">
-        <div class="subject-select-wrap" style="background: var(--bg-canvas); border: 1px solid var(--border-default); border-radius: var(--radius-sm); padding: 4px 10px;">
+        <div class="subject-select-wrap"
+          style="background: var(--bg-canvas); border: 1px solid var(--border-default); border-radius: var(--radius-sm); padding: 4px 10px;">
           <span class="subject-dot" id="manualSubjectDot"></span>
-          <select id="manualSubjectSelect" class="subject-select" onchange="onManualSubjectChange()" style="font-size: 0.82rem;">
+          <select id="manualSubjectSelect" class="subject-select" onchange="onManualSubjectChange()"
+            style="font-size: 0.82rem;">
             <!-- Populated dynamically -->
           </select>
         </div>
         <input type="number" id="manualMinutes" class="input-field" placeholder="Duration (minutes)" min="1" max="1440">
         <button class="btn btn-secondary" onclick="logManualEntry()">Log Session</button>
-        <button class="btn btn-ghost btn-sm" onclick="seedDemoData()" title="Populate realistic dummy data for 90 days across subjects to test the heatmap">
+        <button class="btn btn-ghost btn-sm" onclick="seedDemoData()"
+          title="Populate realistic dummy data for 90 days across subjects to test the heatmap">
           🎲 Seed Demo Data
         </button>
       </div>
@@ -1169,7 +1239,8 @@
 
     <!-- Footer -->
     <footer>
-      <span>Zero-dependency &bull; Works offline via localStorage &bull; Deployable to GitHub Pages, Vercel & Firebase</span>
+      <span>Zero-dependency &bull; Works offline via localStorage &bull; Deployable to GitHub Pages, Vercel &
+        Firebase</span>
       <span><a href="javascript:void(0)" onclick="clearAllData()">Reset All Data</a></span>
     </footer>
   </div>
@@ -1192,19 +1263,22 @@
         <div style="border-top: 1px solid var(--border-default); padding-top: 16px;">
           <span class="metric-title" style="margin-bottom: 10px;">Add New Subject</span>
           <div style="display: flex; flex-direction: column; gap: 12px;">
-            <input type="text" id="newSubjectName" class="input-field" placeholder="Subject name (e.g. Organic Chemistry)" maxlength="28">
-            
+            <input type="text" id="newSubjectName" class="input-field"
+              placeholder="Subject name (e.g. Organic Chemistry)" maxlength="28">
+
             <div>
               <span style="font-size: 0.78rem; color: var(--text-secondary);">Choose Subject Color:</span>
               <div class="color-swatches-grid" id="colorSwatchesGrid">
                 <!-- Color swatches rendered dynamically -->
                 <div class="custom-color-picker-wrap" title="Custom color picker">
-                  <input type="color" id="customColorInput" class="custom-color-input" value="#58a6ff" onchange="onCustomColorPick(event)">
+                  <input type="color" id="customColorInput" class="custom-color-input" value="#58a6ff"
+                    onchange="onCustomColorPick(event)">
                 </div>
               </div>
             </div>
 
-            <button class="btn btn-primary" onclick="createNewSubject()" style="justify-content: center; margin-top: 4px;">
+            <button class="btn btn-primary" onclick="createNewSubject()"
+              style="justify-content: center; margin-top: 4px;">
               + Create Subject
             </button>
           </div>
@@ -1511,7 +1585,7 @@
             seg.className = 'subject-progress-segment';
             seg.style.width = `${pct}%`;
             seg.style.backgroundColor = sub.color;
-            seg.title = `${sub.name}: ${(mins/60).toFixed(1)} hrs (${Math.round(pct)}%)`;
+            seg.title = `${sub.name}: ${(mins / 60).toFixed(1)} hrs (${Math.round(pct)}%)`;
             bar.appendChild(seg);
           }
         });
@@ -1527,7 +1601,7 @@
       allPill.innerHTML = `
         <span class="subject-dot" style="background-color: var(--accent-green); box-shadow: 0 0 6px var(--accent-green);"></span>
         <span>All Subjects</span>
-        <span style="font-size: 0.72rem; color: var(--text-muted);">(${(grandTotalMins/60).toFixed(1)}h)</span>
+        <span style="font-size: 0.72rem; color: var(--text-muted);">(${(grandTotalMins / 60).toFixed(1)}h)</span>
       `;
       allPill.onclick = () => setSubjectFilter('all');
       pillsContainer.appendChild(allPill);
@@ -1544,7 +1618,7 @@
         pill.innerHTML = `
           <span class="subject-dot" style="background-color: ${sub.color}; box-shadow: 0 0 6px ${sub.color};"></span>
           <span>${sub.name}</span>
-          <span style="font-size: 0.72rem; color: var(--text-muted);">(${(mins/60).toFixed(1)}h)</span>
+          <span style="font-size: 0.72rem; color: var(--text-muted);">(${(mins / 60).toFixed(1)}h)</span>
         `;
         pill.onclick = () => setSubjectFilter(sub.id);
         pillsContainer.appendChild(pill);
@@ -1557,7 +1631,7 @@
     function updateSubjectDropdowns() {
       const timerSelect = document.getElementById('timerSubjectSelect');
       const manualSelect = document.getElementById('manualSubjectSelect');
-      
+
       const prevTimerVal = timerSelect.value || activeSubjectId;
       const prevManualVal = manualSelect.value || activeSubjectId;
 
@@ -1661,7 +1735,7 @@
       subjects.forEach(sub => {
         const row = document.createElement('div');
         row.className = 'subject-manage-item';
-        
+
         const hrs = ((totals[sub.id] || 0) / 60).toFixed(1);
         row.innerHTML = `
           <div class="subject-manage-item-info">
@@ -1827,11 +1901,11 @@
           timerState = 'running';
           timerStartTime = saved.timerStartTime;
           accumulatedSeconds = saved.accumulatedSeconds || 0;
-          
+
           timerSection.classList.add('timer-running');
           timerPill.className = 'timer-pill running';
           timerPill.innerHTML = '<span>Focusing...</span>';
-          
+
           btnToggle.innerHTML = `
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
               <rect x="6" y="4" width="4" height="16"></rect>
@@ -1842,7 +1916,7 @@
           btnToggle.className = 'btn btn-secondary';
           btnEnd.disabled = false;
           btnReset.disabled = false;
-          
+
           timerInterval = setInterval(updateTimerUI, 500);
         } else if (saved.timerState === 'paused') {
           timerState = 'paused';
@@ -2009,9 +2083,9 @@
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
-      const currentDayIndex = (today.getDay() + 6) % 7; 
+      const currentDayIndex = (today.getDay() + 6) % 7;
       const totalDaysToRender = (52 * 7) + currentDayIndex + 1;
-      
+
       const startDate = new Date(today);
       startDate.setDate(today.getDate() - totalDaysToRender + 1);
 
@@ -2113,7 +2187,7 @@
       });
 
       const filterSubName = activeFilterSubject === 'all' ? "all subjects" : getSubjectById(activeFilterSubject).name;
-      document.getElementById('heatmapStatsSummary').textContent = 
+      document.getElementById('heatmapStatsSummary').textContent =
         `${totalMins} total minutes logged for ${filterSubName} across ${activeDays} active days in past year`;
     }
 
@@ -2122,7 +2196,7 @@
       const cell = e.currentTarget || e.target;
       const dateStr = cell.getAttribute('data-date');
       if (!dateStr) return;
-      
+
       const day = normalizeDayData(studyData[dateStr]);
       const dateObj = new Date(dateStr + 'T00:00:00');
       const formattedDate = dateObj.toLocaleDateString(undefined, {
@@ -2131,11 +2205,11 @@
 
       let minutes = activeFilterSubject === 'all' ? day.total : (day.subjects[activeFilterSubject] || 0);
 
-      let timeText = minutes === 0 
-        ? "No study time" 
-        : minutes < 60 
-          ? `<strong>${minutes} mins</strong>` 
-          : `<strong>${Math.floor(minutes/60)}h ${minutes%60}m</strong> (${minutes} mins)`;
+      let timeText = minutes === 0
+        ? "No study time"
+        : minutes < 60
+          ? `<strong>${minutes} mins</strong>`
+          : `<strong>${Math.floor(minutes / 60)}h ${minutes % 60}m</strong> (${minutes} mins)`;
 
       let html = `<div class="tooltip-header">${timeText} on ${formattedDate}</div>`;
 
@@ -2195,7 +2269,7 @@
       const todayRecord = normalizeDayData(studyData[todayDateStr]);
       const todayMins = todayRecord.total;
       if (todayMins >= 60) {
-        document.getElementById('metricToday').textContent = `${Math.floor(todayMins/60)}h ${todayMins%60}m`;
+        document.getElementById('metricToday').textContent = `${Math.floor(todayMins / 60)}h ${todayMins % 60}m`;
       } else {
         document.getElementById('metricToday').textContent = `${todayMins}m`;
       }
@@ -2266,7 +2340,7 @@
       if (!file) return;
 
       const reader = new FileReader();
-      reader.onload = async function(e) {
+      reader.onload = async function (e) {
         try {
           const parsed = JSON.parse(e.target.result);
           if (typeof parsed !== 'object' || parsed === null) {
@@ -2292,7 +2366,7 @@
             if (/^\d{4}-\d{2}-\d{2}$/.test(k)) {
               const currentDay = normalizeDayData(merged[k]);
               const incomingDay = normalizeDayData(v);
-              
+
               currentDay.total = Math.max(currentDay.total, incomingDay.total);
               for (const [subId, mins] of Object.entries(incomingDay.subjects)) {
                 currentDay.subjects[subId] = Math.max(currentDay.subjects[subId] || 0, mins);
@@ -2430,4 +2504,5 @@
     initApp();
   </script>
 </body>
+
 </html>
