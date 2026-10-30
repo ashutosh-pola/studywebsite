@@ -1626,22 +1626,24 @@
     const STORAGE_KEY_SUBJECTS = 'study_tracker_subjects_v1';
 
     const DEFAULT_SUBJECTS = [
-      { id: "cs", name: "Computer Science", color: "#bc8cff" },
-      { id: "math", name: "Mathematics", color: "#58a6ff" },
-      { id: "physics", name: "Physics & Science", color: "#f0883e" },
-      { id: "reading", name: "Literature & Reading", color: "#39c5bb" },
-      { id: "general", name: "General Study", color: "#3fb950" }
+      { id: "chem", name: "Chemistry", color: "#f778ba" },
+      { id: "physics", name: "Physics", color: "#58a6ff" },
+      { id: "math", name: "Math", color: "#39c5bb" },
+      { id: "mechanics", name: "Mechanics", color: "#f0883e" },
+      { id: "english", name: "English", color: "#bc8cff" },
+      { id: "economics", name: "Economics", color: "#ffd600" },
+      { id: "pure_math", name: "Pure Math", color: "#00e676" }
     ];
 
     const PRESET_COLORS = [
-      "#58a6ff", // Sapphire Blue
-      "#bc8cff", // Amethyst Purple
-      "#3fb950", // Emerald Green
-      "#f0883e", // Sunset Orange
-      "#f778ba", // Rose Pink
-      "#d29922", // Golden Yellow
-      "#39c5bb", // Cyber Teal
-      "#f85149"  // Ruby Red
+      "#f778ba", // Chemistry Rose
+      "#58a6ff", // Physics Blue
+      "#39c5bb", // Math Teal
+      "#f0883e", // Mechanics Orange
+      "#bc8cff", // English Purple
+      "#ffd600", // Economics Gold
+      "#00e676", // Pure Math Green
+      "#f85149"  // Crimson
     ];
 
     // ========================================================================
@@ -1680,26 +1682,55 @@
 
     const StorageAdapter = {
       async loadSubjects() {
+        let loaded = null;
         if (USE_FIREBASE && db) {
           try {
             const doc = await db.collection("study_tracker").doc("user_history").get();
             if (doc.exists && Array.isArray(doc.data().subjects) && doc.data().subjects.length > 0) {
-              return doc.data().subjects;
+              loaded = doc.data().subjects;
             }
           } catch (e) {
             console.warn("Could not load subjects from Firebase, trying localStorage", e);
           }
         }
-        try {
-          const raw = localStorage.getItem(STORAGE_KEY_SUBJECTS);
-          if (raw) {
-            const parsed = JSON.parse(raw);
-            if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (!loaded) {
+          try {
+            const raw = localStorage.getItem(STORAGE_KEY_SUBJECTS);
+            if (raw) {
+              const parsed = JSON.parse(raw);
+              if (Array.isArray(parsed) && parsed.length > 0) loaded = parsed;
+            }
+          } catch (e) {
+            console.warn("Could not load subjects from storage", e);
           }
-        } catch (e) {
-          console.warn("Could not load subjects from storage", e);
         }
-        return JSON.parse(JSON.stringify(DEFAULT_SUBJECTS));
+
+        // Auto-upgrade / migration:
+        if (!loaded || loaded.length === 0) {
+          loaded = JSON.parse(JSON.stringify(DEFAULT_SUBJECTS));
+          await StorageAdapter.saveSubjects(loaded);
+        } else {
+          // If the loaded subjects are the legacy placeholders without the user's subjects
+          const hasAnyUserSub = loaded.some(s => ["chem", "mechanics", "pure_math", "economics"].includes(s.id));
+          if (!hasAnyUserSub) {
+            loaded = JSON.parse(JSON.stringify(DEFAULT_SUBJECTS));
+            await StorageAdapter.saveSubjects(loaded);
+          } else {
+            // Ensure all 7 user subjects are present in case only some were saved
+            let updated = false;
+            DEFAULT_SUBJECTS.forEach(defSub => {
+              if (!loaded.some(s => s.id === defSub.id || s.name.toLowerCase() === defSub.name.toLowerCase())) {
+                loaded.push(defSub);
+                updated = true;
+              }
+            });
+            if (updated) {
+              await StorageAdapter.saveSubjects(loaded);
+            }
+          }
+        }
+
+        return loaded;
       },
 
       async saveSubjects(newSubjects) {
@@ -1749,7 +1780,7 @@
         }
       },
 
-      async saveSession(dateStr, addedMinutes, subjectId = "general") {
+      async saveSession(dateStr, addedMinutes, subjectId = "chem") {
         let current = await this.loadData();
         let day = normalizeDayData(current[dateStr]);
         day.total += addedMinutes;
@@ -1791,7 +1822,7 @@
 
     // --- State Variables ---
     let subjects = [];
-    let activeSubjectId = "cs";
+    let activeSubjectId = "chem";
     let activeFilterSubject = "all"; // 'all' or specific subjectId
     let selectedNewSubjectColor = PRESET_COLORS[0];
 
@@ -1821,7 +1852,7 @@
     function normalizeDayData(val) {
       if (!val) return { total: 0, subjects: {} };
       if (typeof val === 'number') {
-        return { total: val, subjects: { "general": val } };
+        return { total: val, subjects: { "chem": val } };
       }
       return {
         total: typeof val.total === 'number' ? val.total : 0,
