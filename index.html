@@ -14,20 +14,12 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Study Tracker">
-  <meta name="theme-color" content="#090a0f">
+  <meta name="theme-color" content="#000000">
 
   <!-- Modern Clean Typography (Plus Jakarta Sans & JetBrains Mono) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <!-- Early Theme Bootstrap to prevent flash of wrong style -->
-  <script>
-    (function () {
-      const savedTheme = localStorage.getItem('study_tracker_theme') || 'minimalist-dark';
-      document.documentElement.setAttribute('data-theme', savedTheme);
-    })();
-  </script>
 
   <!-- Firebase App & Firestore Compat SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -35,137 +27,43 @@
 
   <style>
     /* ==========================================================================
-       THEME DESIGN SYSTEM (Minimalist Studio, GitHub Dark, OLED, Minimalist Light)
+       OLED MIDNIGHT DESIGN SYSTEM (Pitch Black & Precision Emerald)
        ========================================================================== */
-    :root, [data-theme="minimalist-dark"] {
+    :root {
       --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
-      --radius-sm: 8px;
-      --radius-md: 12px;
-      --radius-lg: 18px;
-      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-      --shadow-md: 0 12px 32px -8px rgba(0, 0, 0, 0.6);
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 10px;
 
-      /* 1. Minimalist Studio (Clean Obsidian & Radiant Emerald) */
-      --bg-canvas: #090a0f;
-      --bg-surface: #12131b;
-      --bg-subtle: #191b26;
-      --border-default: rgba(255, 255, 255, 0.08);
-      --border-muted: rgba(255, 255, 255, 0.04);
-      --text-primary: #f8fafc;
-      --text-secondary: #94a3b8;
-      --text-muted: #64748b;
-
-      --accent-green: #10b981;
-      --accent-green-hover: #059669;
-      --accent-green-glow: rgba(16, 185, 129, 0.35);
-      --accent-red: #f43f5e;
-      --accent-red-hover: #e11d48;
-      --accent-blue: #38bdf8;
-      --accent-purple: #a855f7;
-      --accent-gold: #f59e0b;
-
-      /* GitHub Activity Heatmap Green Palette (5+ hrs = Full Green) */
-      --heat-0: #151722;
-      --heat-1: #064e3b;
-      --heat-2: #047857;
-      --heat-3: #10b981;
-      --heat-4: #34d399;
-
-      --timer-gradient: radial-gradient(circle at 50% 12%, #191c2b 0%, #12131b 85%);
-      --brand-gradient: linear-gradient(135deg, #059669, #34d399);
-      --tooltip-bg: #12131b;
-    }
-
-    [data-theme="github-dark"] {
-      --bg-canvas: #0d1117;
-      --bg-surface: #161b22;
-      --bg-subtle: #21262d;
-      --border-default: #30363d;
-      --border-muted: #21262d;
-      --text-primary: #f0f6fc;
-      --text-secondary: #8b949e;
-      --text-muted: #6e7681;
-
-      --accent-green: #238636;
-      --accent-green-hover: #2ea043;
-      --accent-green-glow: rgba(35, 134, 54, 0.4);
-      --accent-red: #da3633;
-      --accent-red-hover: #f85149;
-      --accent-blue: #58a6ff;
-      --accent-purple: #bc8cff;
-      --accent-gold: #d29922;
-
-      --heat-0: #161b22;
-      --heat-1: #0e4429;
-      --heat-2: #006d32;
-      --heat-3: #26a641;
-      --heat-4: #39d353;
-
-      --timer-gradient: radial-gradient(circle at 50% 15%, #1c232e 0%, #161b22 80%);
-      --brand-gradient: linear-gradient(135deg, #238636, #39d353);
-      --tooltip-bg: #1c2128;
-    }
-
-    [data-theme="oled-black"] {
+      /* Pitch Black & High-Precision OLED Neutrals */
       --bg-canvas: #000000;
       --bg-surface: #0a0a0a;
-      --bg-subtle: #141414;
-      --border-default: #262626;
-      --border-muted: #171717;
-      --text-primary: #ffffff;
-      --text-secondary: #a3a3a3;
-      --text-muted: #525252;
+      --bg-subtle: #121212;
+      --border-default: #1f1f1f;
+      --border-muted: #141414;
+      --text-primary: #ededed;
+      --text-secondary: #888888;
+      --text-muted: #4e4e4e;
 
+      /* Accents (Crisp, under-control, no neon glows) */
       --accent-green: #00e676;
       --accent-green-hover: #00c853;
-      --accent-green-glow: rgba(0, 230, 118, 0.35);
-      --accent-red: #ff1744;
-      --accent-red-hover: #d50000;
-      --accent-blue: #00b0ff;
-      --accent-purple: #d500f9;
+      --accent-red: #f85149;
+      --accent-red-hover: #ff7b72;
+      --accent-blue: #58a6ff;
+      --accent-purple: #bc8cff;
       --accent-gold: #ffd600;
 
-      --heat-0: #121212;
+      /* GitHub Activity Heatmap Green Palette on OLED (5+ hrs = Full Level 4 Green) */
+      --heat-0: #101010;
       --heat-1: #003315;
       --heat-2: #006b2b;
       --heat-3: #00ab47;
       --heat-4: #00ff66;
 
-      --timer-gradient: radial-gradient(circle at 50% 15%, #121212 0%, #060606 85%);
-      --brand-gradient: linear-gradient(135deg, #00ab47, #00ff66);
-      --tooltip-bg: #0a0a0a;
-    }
-
-    [data-theme="minimalist-light"] {
-      --bg-canvas: #f8fafc;
-      --bg-surface: #ffffff;
-      --bg-subtle: #f1f5f9;
-      --border-default: #e2e8f0;
-      --border-muted: #cbd5e1;
-      --text-primary: #0f172a;
-      --text-secondary: #475569;
-      --text-muted: #94a3b8;
-
-      --accent-green: #059669;
-      --accent-green-hover: #047857;
-      --accent-green-glow: rgba(5, 150, 105, 0.2);
-      --accent-red: #e11d48;
-      --accent-red-hover: #be123c;
-      --accent-blue: #0284c7;
-      --accent-purple: #7c3aed;
-      --accent-gold: #d97706;
-
-      --heat-0: #e2e8f0;
-      --heat-1: #9be9a8;
-      --heat-2: #40c463;
-      --heat-3: #30a14e;
-      --heat-4: #216e39;
-
-      --timer-gradient: radial-gradient(circle at 50% 15%, #ffffff 0%, #f1f5f9 85%);
-      --brand-gradient: linear-gradient(135deg, #059669, #10b981);
-      --tooltip-bg: #ffffff;
+      --tooltip-bg: #0d0d0d;
     }
 
     * {
@@ -188,8 +86,8 @@
       transition: background-color 0.25s ease, color 0.25s ease;
     }
 
-    body, header, .metric-card, .timer-section, .subject-breakdown-card, .heatmap-card, .modal-content, .btn, .input-field, .theme-picker-pill, .sync-status {
-      transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+    body, header, .modal-content, .btn, .input-field, .sync-status {
+      transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
     }
 
     .app-container {
@@ -221,24 +119,21 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
+      user-select: none;
     }
 
-    .brand-icon {
-      width: 32px;
-      height: 32px;
-      background: var(--brand-gradient);
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #ffffff;
-      box-shadow: 0 2px 8px var(--accent-green-glow);
+    .brand-mark {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      display: inline-block;
     }
 
     .brand-title, .brand h1 {
-      font-size: 1.05rem;
-      font-weight: 700;
+      font-size: 0.95rem;
+      font-weight: 600;
       letter-spacing: -0.02em;
       color: var(--text-primary);
     }
@@ -246,72 +141,27 @@
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       flex-wrap: wrap;
-    }
-
-    /* Style Switcher Pill */
-    .theme-picker-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.78rem;
-      color: var(--text-secondary);
-      padding: 4px 10px;
-      background: var(--bg-subtle);
-      border: 1px solid var(--border-default);
-      border-radius: 20px;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .theme-picker-pill:hover {
-      border-color: var(--accent-green);
-      color: var(--text-primary);
-    }
-
-    .theme-picker-label {
-      font-weight: 600;
-      color: var(--text-muted);
-      font-size: 0.74rem;
-      letter-spacing: 0.02em;
-    }
-
-    .theme-select {
-      background: transparent;
-      border: none;
-      color: var(--text-primary);
-      font-size: 0.78rem;
-      font-weight: 600;
-      font-family: var(--font-sans);
-      cursor: pointer;
-      outline: none;
-      padding-right: 2px;
-    }
-
-    .theme-select option {
-      background: var(--bg-surface);
-      color: var(--text-primary);
     }
 
     .sync-status {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-size: 0.76rem;
+      font-size: 0.74rem;
       color: var(--text-secondary);
-      padding: 4px 10px;
-      background: var(--bg-subtle);
+      padding: 4px 9px;
+      background: #0d0d0d;
       border: 1px solid var(--border-default);
-      border-radius: 20px;
+      border-radius: 5px;
     }
 
     .status-dot {
-      width: 7px;
-      height: 7px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
       background: var(--accent-green);
-      box-shadow: 0 0 6px var(--accent-green);
     }
 
     /* ==========================================================================
@@ -428,100 +278,82 @@
     .focus-badge, .timer-pill {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      font-size: 0.76rem;
-      font-weight: 600;
+      gap: 7px;
+      font-size: 0.72rem;
+      font-weight: 500;
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      padding: 4px 14px;
-      border-radius: 20px;
-      background: var(--bg-subtle);
-      border: 1px solid var(--border-default);
-      color: var(--text-secondary);
-      margin-bottom: 20px;
-      transition: all 0.25s ease;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      user-select: none;
     }
 
     .focus-pulse-dot {
-      width: 6px;
-      height: 6px;
+      width: 5px;
+      height: 5px;
       border-radius: 50%;
-      background: var(--text-muted);
-      transition: all 0.25s ease;
+      background: #333333;
+      transition: background-color 0.2s ease;
     }
 
     .timer-running .focus-badge, .timer-running .timer-pill, .timer-pill.running {
-      background: rgba(16, 185, 129, 0.12);
-      border-color: var(--accent-green);
-      color: var(--accent-green);
+      color: var(--text-secondary);
     }
 
     .timer-running .focus-pulse-dot, .timer-pill.running .focus-pulse-dot {
       background: var(--accent-green);
-      box-shadow: 0 0 8px var(--accent-green);
-      animation: pulseGlow 1.8s infinite;
     }
 
     .timer-paused .focus-badge, .timer-paused .timer-pill, .timer-pill.paused {
-      background: rgba(245, 158, 11, 0.12);
-      border-color: var(--accent-gold);
       color: var(--accent-gold);
     }
 
     .timer-paused .focus-pulse-dot, .timer-pill.paused .focus-pulse-dot {
       background: var(--accent-gold);
-      box-shadow: 0 0 6px var(--accent-gold);
-      animation: none;
     }
 
-    @keyframes pulseGlow {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.4); opacity: 0.6; }
-    }
-
-    /* Tactile Subject Chip Pill */
+    /* Low-Profile Subject Select Chip */
     .subject-chip-pill, .subject-picker-bar {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: var(--bg-subtle);
+      background: #0a0a0a;
       border: 1px solid var(--border-default);
-      border-radius: 24px;
-      padding: 5px 14px;
+      border-radius: 6px;
+      padding: 4px 11px;
       cursor: pointer;
       position: relative;
       margin-bottom: 14px;
-      transition: all 0.2s ease;
+      transition: border-color 0.15s ease, background-color 0.15s ease;
     }
 
     .subject-chip-pill:hover, .subject-picker-bar:hover {
-      border-color: var(--text-secondary);
-      background: rgba(255, 255, 255, 0.04);
+      border-color: #333333;
+      background: #111111;
     }
 
     .subject-dot {
-      width: 9px;
-      height: 9px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
       display: inline-block;
       flex-shrink: 0;
-      box-shadow: 0 0 6px currentColor;
-      transition: background-color 0.2s ease, box-shadow 0.2s ease;
+      transition: background-color 0.2s ease;
     }
 
     .subject-select {
       background: transparent;
       color: var(--text-primary);
       border: none;
-      font-size: 0.88rem;
-      font-weight: 600;
+      font-size: 0.82rem;
+      font-weight: 500;
       outline: none;
       cursor: pointer;
       font-family: var(--font-sans);
     }
 
     .subject-select option {
-      background: var(--bg-surface);
+      background: #0a0a0a;
       color: var(--text-primary);
     }
 
@@ -532,69 +364,39 @@
 
     /* Monumental Numerals Clock */
     .focus-clock-wrap {
-      margin: 4px 0 24px;
+      margin: 2px 0 20px;
     }
 
     .stopwatch-display {
       font-family: var(--font-mono);
       font-size: clamp(3.8rem, 11vw, 6.2rem);
-      font-weight: 700;
+      font-weight: 600;
       letter-spacing: -0.04em;
       font-variant-numeric: tabular-nums;
       color: var(--text-primary);
       line-height: 1;
       user-select: none;
-      transition: color 0.2s ease, text-shadow 0.2s ease;
     }
 
     .timer-running .stopwatch-display {
-      color: var(--text-primary);
-      text-shadow: 0 0 40px var(--accent-green-glow);
+      color: #ffffff;
     }
 
-    /* Focus Controls & Keyboard Badges */
+    /* Focus Controls */
     .focus-controls, .timer-controls {
       display: flex;
-      gap: 12px;
+      gap: 8px;
       flex-wrap: wrap;
       justify-content: center;
       align-items: center;
-      margin-bottom: 18px;
-    }
-
-    .btn-focus-start {
-      padding: 12px 28px;
-      font-size: 0.96rem;
-      box-shadow: 0 4px 16px var(--accent-green-glow);
-    }
-
-    .btn-focus-end {
-      padding: 12px 22px;
-      font-size: 0.96rem;
-    }
-
-    .btn-focus-reset {
-      padding: 12px 16px;
-    }
-
-    .kbd-hint {
-      font-size: 0.65rem;
-      font-family: var(--font-mono);
-      font-weight: 600;
-      padding: 2px 6px;
-      border-radius: 4px;
-      background: rgba(0, 0, 0, 0.25);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: inherit;
-      opacity: 0.85;
-      margin-left: 2px;
+      margin-bottom: 16px;
     }
 
     .focus-footer-links {
       display: flex;
       align-items: center;
       gap: 10px;
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       color: var(--text-muted);
     }
 
@@ -603,7 +405,7 @@
       border: none;
       color: var(--text-secondary);
       cursor: pointer;
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       font-family: inherit;
       display: inline-flex;
       align-items: center;
@@ -613,89 +415,100 @@
 
     .link-btn:hover {
       color: var(--text-primary);
-      text-decoration: underline;
     }
 
     .dot-separator {
       color: var(--border-default);
     }
 
+    .keyboard-tip {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+
     .keyboard-tip code {
       font-family: var(--font-mono);
-      background: var(--bg-subtle);
+      background: #111111;
       border: 1px solid var(--border-default);
       border-radius: 4px;
-      padding: 1px 5px;
-      font-size: 0.72rem;
+      padding: 1px 4px;
+      font-size: 0.7rem;
       color: var(--text-secondary);
     }
 
-    /* Buttons */
+    /* Buttons - Clean Precision Engineering (No AI glows) */
     .btn {
       appearance: none;
       border: 1px solid transparent;
-      padding: 9px 18px;
-      border-radius: var(--radius-sm);
-      font-size: 0.88rem;
-      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 0.84rem;
+      font-weight: 500;
+      letter-spacing: -0.01em;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      transition: all 0.15s ease-in-out;
+      gap: 7px;
+      transition: all 0.12s ease;
       user-select: none;
       font-family: inherit;
+      box-shadow: none !important;
     }
 
     .btn:active {
-      transform: scale(0.97);
+      transform: scale(0.98);
     }
 
     .btn:disabled {
-      opacity: 0.35;
+      opacity: 0.28;
       cursor: not-allowed;
       transform: none !important;
     }
 
     .btn-sm {
-      padding: 6px 14px;
-      font-size: 0.78rem;
+      padding: 5px 12px;
+      font-size: 0.76rem;
+      border-radius: 5px;
     }
 
     .btn-icon {
-      padding: 6px 10px;
+      padding: 8px 10px;
     }
 
+    /* Primary: High-contrast white on OLED black */
     .btn-primary {
-      background-color: var(--accent-green);
-      color: #ffffff;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      background-color: #ffffff;
+      color: #000000;
+      border-color: #ffffff;
+      font-weight: 600;
     }
 
     .btn-primary:hover:not(:disabled) {
-      background-color: var(--accent-green-hover);
-      box-shadow: 0 0 16px var(--accent-green-glow);
+      background-color: #e5e5e5;
+      border-color: #e5e5e5;
     }
 
     .btn-secondary {
-      background-color: var(--bg-subtle);
+      background-color: #0d0d0d;
       color: var(--text-primary);
       border-color: var(--border-default);
     }
 
     .btn-secondary:hover:not(:disabled) {
-      background-color: var(--border-default);
-      border-color: var(--text-secondary);
+      background-color: #171717;
+      border-color: #333333;
     }
 
     .btn-danger {
-      background-color: var(--accent-red);
-      color: #ffffff;
+      background-color: #161011;
+      color: var(--accent-red);
+      border-color: rgba(248, 81, 73, 0.28);
     }
 
     .btn-danger:hover:not(:disabled) {
-      background-color: var(--accent-red-hover);
-      box-shadow: 0 0 16px rgba(244, 63, 94, 0.4);
+      background-color: #241315;
+      border-color: rgba(248, 81, 73, 0.6);
+      color: var(--accent-red-hover);
     }
 
     .btn-ghost {
@@ -705,17 +518,18 @@
     }
 
     .btn-ghost:hover:not(:disabled) {
-      background: var(--bg-subtle);
+      background: #111111;
+      border-color: #333333;
       color: var(--text-primary);
     }
 
     .input-field {
-      background: var(--bg-canvas);
+      background: #000000;
       border: 1px solid var(--border-default);
       color: var(--text-primary);
-      padding: 9px 12px;
-      border-radius: var(--radius-sm);
-      font-size: 0.85rem;
+      padding: 8px 11px;
+      border-radius: 6px;
+      font-size: 0.84rem;
       outline: none;
       font-family: inherit;
       width: 100%;
@@ -723,21 +537,21 @@
     }
 
     .input-field:focus {
-      border-color: var(--accent-green);
+      border-color: #444444;
     }
 
     .form-group {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 5px;
     }
 
     .form-label {
-      font-size: 0.76rem;
+      font-size: 0.72rem;
       font-weight: 600;
       color: var(--text-secondary);
       text-transform: uppercase;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.05em;
     }
 
     /* Duration Quick Presets */
@@ -749,39 +563,40 @@
     }
 
     .dur-chip {
-      background: var(--bg-subtle);
+      background: #0d0d0d;
       border: 1px solid var(--border-default);
       color: var(--text-secondary);
-      border-radius: 14px;
-      padding: 3px 10px;
-      font-size: 0.74rem;
-      font-weight: 600;
+      border-radius: 5px;
+      padding: 3px 9px;
+      font-size: 0.73rem;
+      font-weight: 500;
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: all 0.12s ease;
     }
 
     .dur-chip:hover {
-      border-color: var(--accent-green);
+      border-color: #444444;
       color: var(--text-primary);
+      background: #141414;
     }
 
     /* Action List inside More Options Modal */
     .more-actions-list {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
     }
 
     .action-item-card {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 16px;
-      background: var(--bg-subtle);
+      padding: 10px 14px;
+      background: #080808;
       border: 1px solid var(--border-default);
-      border-radius: var(--radius-sm);
+      border-radius: 6px;
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: all 0.12s ease;
       text-align: left;
       width: 100%;
       color: inherit;
@@ -789,8 +604,8 @@
     }
 
     .action-item-card:hover {
-      border-color: var(--text-secondary);
-      background: rgba(255, 255, 255, 0.04);
+      border-color: #333333;
+      background: #111111;
     }
 
     .action-item-info h4 {
@@ -1199,27 +1014,28 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 5px 12px;
-      background: var(--bg-subtle);
+      padding: 4px 10px;
+      background: #0a0a0a;
       border: 1px solid var(--border-default);
-      border-radius: 20px;
-      font-size: 0.78rem;
+      border-radius: 5px;
+      font-size: 0.76rem;
       font-weight: 500;
       color: var(--text-secondary);
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: all 0.12s ease;
       user-select: none;
     }
 
     .subject-filter-pill:hover {
-      border-color: #8b949e;
+      border-color: #333333;
       color: var(--text-primary);
+      background: #111111;
     }
 
     .subject-filter-pill.active {
-      background: rgba(88, 166, 255, 0.12);
-      border-color: var(--accent-blue);
-      color: #fff;
+      background: #181818;
+      border-color: #383838;
+      color: #ffffff;
       font-weight: 600;
     }
 
@@ -1256,7 +1072,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.75);
+      background: rgba(0, 0, 0, 0.85);
       backdrop-filter: blur(4px);
       display: none;
       align-items: center;
@@ -1270,14 +1086,14 @@
     }
 
     .modal-content {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-default);
-      border-radius: var(--radius-lg);
+      background: #080808;
+      border: 1px solid #1f1f1f;
+      border-radius: 8px;
       width: 100%;
-      max-width: 480px;
+      max-width: 460px;
       max-height: 90vh;
       overflow-y: auto;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.95);
       display: flex;
       flex-direction: column;
     }
@@ -1455,33 +1271,14 @@
 
   <div class="app-container">
     <!-- Top Bar -->
+    <!-- Top Bar (Clean, Minimalist OLED) -->
     <header class="app-header">
       <div class="brand">
-        <div class="brand-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
-            <circle cx="12" cy="12" r="10"></circle>
-            <polyline points="12 6 12 12 16 14"></polyline>
-          </svg>
-        </div>
+        <span class="brand-mark"></span>
         <div class="brand-title">Study Tracker</div>
       </div>
 
       <div class="header-actions">
-        <!-- Visual Style Switcher -->
-        <div class="theme-picker-pill" title="Choose your visual style">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="5"></circle>
-            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
-          </svg>
-          <span class="theme-picker-label">Style:</span>
-          <select id="themeSelector" class="theme-select" onchange="setAppTheme(this.value)">
-            <option value="minimalist-dark" selected>Minimalist Studio</option>
-            <option value="github-dark">GitHub Dark (Original)</option>
-            <option value="oled-black">OLED Midnight</option>
-            <option value="minimalist-light">Minimalist Paper</option>
-          </select>
-        </div>
-
         <!-- Cloud Sync Status -->
         <div class="sync-status" title="Real-time Cloud Status">
           <div class="status-dot"></div>
@@ -1490,16 +1287,16 @@
 
         <!-- Quick Log Trigger -->
         <button class="btn btn-secondary btn-sm" onclick="openQuickLogModal()" title="Log past study session (L)">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
             <line x1="12" y1="5" x2="12" y2="19"></line>
             <line x1="5" y1="12" x2="19" y2="12"></line>
           </svg>
-          <span>Log Time</span>
+          <span>Log time</span>
         </button>
 
         <!-- More Options Menu Trigger -->
         <button class="btn btn-ghost btn-sm btn-icon" onclick="openMoreActionsModal()" title="Options, Data & Backups">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
             <circle cx="12" cy="12" r="2.2"></circle>
             <circle cx="19" cy="12" r="2.2"></circle>
             <circle cx="5" cy="12" r="2.2"></circle>
@@ -1520,13 +1317,13 @@
           <span>Ready to Focus</span>
         </div>
 
-        <!-- Integrated Subject Chip Pill -->
+        <!-- Low-Profile Subject Select Chip -->
         <div class="subject-chip-pill" title="Change session subject">
           <span class="subject-dot" id="timerSubjectDot"></span>
           <select id="timerSubjectSelect" class="subject-select" onchange="onTimerSubjectChange()">
             <!-- Populated dynamically -->
           </select>
-          <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <svg class="chevron-icon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <polyline points="6 9 12 15 18 9"></polyline>
           </svg>
         </div>
@@ -1536,26 +1333,24 @@
           <div class="stopwatch-display" id="timeDisplay">00:00:00</div>
         </div>
 
-        <!-- Tactile Control Bar with Keyboard Hints -->
+        <!-- Clean Control Bar (No AI glows, no badge clutter) -->
         <div class="focus-controls">
-          <button class="btn btn-primary btn-focus-start" id="btnToggle" onclick="toggleTimer()">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          <button class="btn btn-primary" id="btnToggle" onclick="toggleTimer()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="6 4 20 12 6 20 6 4"></polygon>
             </svg>
-            <span>Start Focus</span>
-            <kbd class="kbd-hint">Space</kbd>
+            <span>Start</span>
           </button>
 
-          <button class="btn btn-danger btn-focus-end" id="btnEnd" onclick="endSession()" disabled>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <rect x="5" y="5" width="14" height="14" rx="2"></rect>
+          <button class="btn btn-danger" id="btnEnd" onclick="endSession()" disabled>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+              <rect x="5" y="5" width="14" height="14" rx="1.5"></rect>
             </svg>
             <span>Finish & Log</span>
-            <kbd class="kbd-hint">E</kbd>
           </button>
 
-          <button class="btn btn-secondary btn-focus-reset" id="btnReset" onclick="resetTimer()" disabled title="Reset stopwatch (R)">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <button class="btn btn-secondary btn-icon" id="btnReset" onclick="resetTimer()" disabled title="Reset stopwatch (R)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
               <path d="M3 3v5h5"></path>
             </svg>
@@ -1564,14 +1359,14 @@
 
         <div class="focus-footer-links">
           <button class="link-btn" onclick="openSubjectModal()">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="3"></circle>
               <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
             </svg>
-            Manage Subjects
+            Subjects
           </button>
           <span class="dot-separator">&bull;</span>
-          <span class="keyboard-tip">Hotkeys: <code>Space</code> to pause, <code>E</code> to finish</span>
+          <span class="keyboard-tip"><code>Space</code> to pause &bull; <code>E</code> to finish &bull; <code>L</code> to log</span>
         </div>
       </main>
 
@@ -2470,14 +2265,14 @@
 
           timerSection.classList.add('timer-running');
           timerPill.className = 'timer-pill running';
-          timerPill.innerHTML = '<span>Focusing...</span>';
+          timerPill.innerHTML = '<span class="focus-pulse-dot"></span><span>Focusing</span>';
 
           btnToggle.innerHTML = `
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
               <rect x="6" y="4" width="4" height="16"></rect>
               <rect x="14" y="4" width="4" height="16"></rect>
             </svg>
-            Pause Session
+            <span>Pause</span>
           `;
           btnToggle.className = 'btn btn-secondary';
           btnEnd.disabled = false;
@@ -2491,13 +2286,13 @@
 
           timerSection.classList.remove('timer-running');
           timerPill.className = 'timer-pill paused';
-          timerPill.innerHTML = '<span>Session Paused</span>';
+          timerPill.innerHTML = '<span class="focus-pulse-dot"></span><span>Paused</span>';
 
           btnToggle.innerHTML = `
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="6 4 20 12 6 20 6 4"></polygon>
             </svg>
-            Resume Session
+            <span>Resume</span>
           `;
           btnToggle.className = 'btn btn-primary';
           btnEnd.disabled = false;
@@ -2518,14 +2313,14 @@
 
         timerSection.classList.add('timer-running');
         timerPill.className = 'timer-pill running';
-        timerPill.innerHTML = '<span>Focusing...</span>';
+        timerPill.innerHTML = '<span class="focus-pulse-dot"></span><span>Focusing</span>';
 
         btnToggle.innerHTML = `
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
             <rect x="6" y="4" width="4" height="16"></rect>
             <rect x="14" y="4" width="4" height="16"></rect>
           </svg>
-          Pause Session
+          <span>Pause</span>
         `;
         btnToggle.className = 'btn btn-secondary';
         btnEnd.disabled = false;
@@ -2538,13 +2333,13 @@
 
         timerSection.classList.remove('timer-running');
         timerPill.className = 'timer-pill paused';
-        timerPill.innerHTML = '<span>Session Paused</span>';
+        timerPill.innerHTML = '<span class="focus-pulse-dot"></span><span>Paused</span>';
 
         btnToggle.innerHTML = `
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="6 4 20 12 6 20 6 4"></polygon>
           </svg>
-          Resume Session
+          <span>Resume</span>
         `;
         btnToggle.className = 'btn btn-primary';
       }
@@ -2561,13 +2356,13 @@
 
       timerSection.classList.remove('timer-running');
       timerPill.className = 'timer-pill';
-      timerPill.innerHTML = '<span>Session Idle</span>';
+      timerPill.innerHTML = '<span class="focus-pulse-dot"></span><span>Ready to Focus</span>';
 
       btnToggle.innerHTML = `
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-          <polygon points="5 3 19 12 5 21 5 3"></polygon>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+          <polygon points="6 4 20 12 6 20 6 4"></polygon>
         </svg>
-        Start Session
+        <span>Start</span>
       `;
       btnToggle.className = 'btn btn-primary';
       btnEnd.disabled = true;
@@ -3020,54 +2815,6 @@
       setTimeout(() => toast.classList.remove('show'), 3200);
     }
 
-    // ========================================================================
-    // VISUAL STYLE & THEME MANAGER
-    // ========================================================================
-    const THEME_STORAGE_KEY = 'study_tracker_theme';
-
-    function initTheme() {
-      const savedTheme = localStorage.getItem(THEME_STORAGE_KEY) || 'minimalist-dark';
-      setAppTheme(savedTheme, false);
-    }
-
-    function setAppTheme(themeName, notify = true) {
-      document.documentElement.setAttribute('data-theme', themeName);
-      document.body.setAttribute('data-theme', themeName);
-
-      const selector = document.getElementById('themeSelector');
-      if (selector && selector.value !== themeName) {
-        selector.value = themeName;
-      }
-
-      localStorage.setItem(THEME_STORAGE_KEY, themeName);
-
-      // Synchronize mobile status bar meta tag
-      const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-      if (metaThemeColor) {
-        const themeColors = {
-          'minimalist-dark': '#090a0f',
-          'github-dark': '#0d1117',
-          'oled-black': '#000000',
-          'minimalist-light': '#f8fafc'
-        };
-        metaThemeColor.setAttribute('content', themeColors[themeName] || '#090a0f');
-      }
-
-      if (notify) {
-        showToast(`✨ Style switched to ${getThemeDisplayName(themeName)}`);
-      }
-    }
-
-    function getThemeDisplayName(themeName) {
-      switch (themeName) {
-        case 'minimalist-dark': return 'Minimalist Studio';
-        case 'github-dark': return 'GitHub Dark (Original)';
-        case 'oled-black': return 'OLED Midnight';
-        case 'minimalist-light': return 'Minimalist Paper';
-        default: return themeName;
-      }
-    }
-
     function setupRealtimeCloudSync() {
       if (!USE_FIREBASE || !db) {
         document.getElementById('storageModeLabel').textContent = "localStorage";
@@ -3076,7 +2823,7 @@
 
       document.getElementById('storageModeLabel').textContent = "Cloud Synced (Firebase)";
       const dot = document.querySelector('.status-dot');
-      if (dot) dot.style.boxShadow = "0 0 10px #39d353";
+      if (dot) dot.style.boxShadow = "none";
 
       // Subscribe to real-time updates across all devices (Mac, tablet, phone, ESP32)
       db.collection("study_tracker").doc("user_history").onSnapshot(doc => {
@@ -3110,7 +2857,6 @@
     // INITIALIZATION
     // ========================================================================
     async function initApp() {
-      initTheme();
       initDates();
       subjects = await StorageAdapter.loadSubjects();
       studyData = await StorageAdapter.loadData();
