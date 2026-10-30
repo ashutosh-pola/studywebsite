@@ -194,37 +194,39 @@
 
     .app-container {
       width: 100%;
-      max-width: 960px;
+      max-width: 1020px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 0;
     }
 
     /* ==========================================================================
-       Header & Brand
+       Header & Brand (Borderless)
        ========================================================================== */
-    header {
+    header, .app-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 16px 20px;
-      background: var(--bg-surface);
-      border: 1px solid var(--border-default);
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-sm);
+      padding: 18px 0 22px;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--border-muted);
+      border-radius: 0;
+      box-shadow: none;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 14px;
+      margin-bottom: 24px;
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .brand-icon {
-      width: 34px;
-      height: 34px;
+      width: 32px;
+      height: 32px;
       background: var(--brand-gradient);
       border-radius: var(--radius-sm);
       display: flex;
@@ -234,21 +236,11 @@
       box-shadow: 0 2px 8px var(--accent-green-glow);
     }
 
-    .brand h1 {
-      font-size: 1.15rem;
-      font-weight: 600;
+    .brand-title, .brand h1 {
+      font-size: 1.05rem;
+      font-weight: 700;
       letter-spacing: -0.02em;
       color: var(--text-primary);
-    }
-
-    .brand-tag {
-      font-size: 0.72rem;
-      font-weight: 500;
-      color: var(--text-secondary);
-      background: var(--bg-subtle);
-      border: 1px solid var(--border-muted);
-      border-radius: 12px;
-      padding: 2px 8px;
     }
 
     .header-actions {
@@ -258,7 +250,7 @@
       flex-wrap: wrap;
     }
 
-    /* Theme / Style Switcher Pill */
+    /* Style Switcher Pill */
     .theme-picker-pill {
       display: inline-flex;
       align-items: center;
@@ -306,7 +298,7 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       color: var(--text-secondary);
       padding: 4px 10px;
       background: var(--bg-subtle);
@@ -315,83 +307,129 @@
     }
 
     .status-dot {
-      width: 8px;
-      height: 8px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
       background: var(--accent-green);
       box-shadow: 0 0 6px var(--accent-green);
     }
 
     /* ==========================================================================
-       Summary Stats Cards
+       HERO SPLIT STAGE: Focus Timer & Side Stats Ledger (NO BOXES)
        ========================================================================== */
-    .metrics-grid {
+    .focus-hero-split {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-    }
-
-    .metric-card {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-default);
-      border-radius: var(--radius-md);
-      padding: 16px 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      transition: border-color 0.2s ease, transform 0.15s ease;
-    }
-
-    .metric-card:hover {
-      border-color: var(--accent-blue);
-      transform: translateY(-1px);
-    }
-
-    .metric-title {
-      font-size: 0.78rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-secondary);
-      display: flex;
+      grid-template-columns: 1fr 280px;
+      gap: 48px;
       align-items: center;
-      gap: 6px;
+      padding: 10px 0 38px;
+      border-bottom: 1px solid var(--border-muted);
     }
 
-    .metric-value {
-      font-family: var(--font-mono);
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      letter-spacing: -0.02em;
+    @media (max-width: 860px) {
+      .focus-hero-split {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
     }
 
-    .metric-subtitle {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-    }
-
-    /* ==========================================================================
-       Study Timer Section
-       ========================================================================== */
-    .timer-section {
-      background: var(--timer-gradient);
-      border: 1px solid var(--border-default);
-      border-radius: var(--radius-lg);
-      padding: 36px 24px 32px;
+    .focus-stage, .timer-section {
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      box-shadow: var(--shadow-md);
+      box-shadow: none;
       position: relative;
     }
 
-    .timer-pill {
+    /* Side Metrics Ledger - Vertical List Layout */
+    .side-metrics-ledger {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 8px 0 8px 32px;
+      border-left: 1px solid var(--border-muted);
+    }
+
+    @media (max-width: 860px) {
+      .side-metrics-ledger {
+        border-left: none;
+        border-top: 1px solid var(--border-muted);
+        padding: 24px 0 0 0;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 20px;
+      }
+    }
+
+    .side-metrics-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .side-metrics-caption {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+    }
+
+    .side-metric-item {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .side-metric-divider {
+      height: 1px;
+      width: 100%;
+      background: var(--border-muted);
+      opacity: 0.8;
+    }
+
+    @media (max-width: 860px) {
+      .side-metric-divider {
+        display: none;
+      }
+    }
+
+    .metric-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: var(--text-secondary);
+    }
+
+    .metric-val, .metric-value {
+      font-family: var(--font-mono);
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+    }
+
+    .metric-val.streak-val {
+      color: var(--accent-gold);
+    }
+
+    .metric-sub, .metric-subtitle {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+
+    .focus-badge, .timer-pill {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      font-size: 0.8rem;
+      gap: 8px;
+      font-size: 0.76rem;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.08em;
@@ -404,50 +442,201 @@
       transition: all 0.25s ease;
     }
 
-    .timer-pill.running {
-      background: rgba(16, 185, 129, 0.15);
+    .focus-pulse-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      transition: all 0.25s ease;
+    }
+
+    .timer-running .focus-badge, .timer-running .timer-pill, .timer-pill.running {
+      background: rgba(16, 185, 129, 0.12);
       border-color: var(--accent-green);
       color: var(--accent-green);
     }
 
-    .timer-pill.paused {
-      background: rgba(210, 153, 34, 0.15);
+    .timer-running .focus-pulse-dot, .timer-pill.running .focus-pulse-dot {
+      background: var(--accent-green);
+      box-shadow: 0 0 8px var(--accent-green);
+      animation: pulseGlow 1.8s infinite;
+    }
+
+    .timer-paused .focus-badge, .timer-paused .timer-pill, .timer-pill.paused {
+      background: rgba(245, 158, 11, 0.12);
       border-color: var(--accent-gold);
-      color: #e3b341;
+      color: var(--accent-gold);
+    }
+
+    .timer-paused .focus-pulse-dot, .timer-pill.paused .focus-pulse-dot {
+      background: var(--accent-gold);
+      box-shadow: 0 0 6px var(--accent-gold);
+      animation: none;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.4); opacity: 0.6; }
+    }
+
+    /* Tactile Subject Chip Pill */
+    .subject-chip-pill, .subject-picker-bar {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-default);
+      border-radius: 24px;
+      padding: 5px 14px;
+      cursor: pointer;
+      position: relative;
+      margin-bottom: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .subject-chip-pill:hover, .subject-picker-bar:hover {
+      border-color: var(--text-secondary);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .subject-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
+      box-shadow: 0 0 6px currentColor;
+      transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .subject-select {
+      background: transparent;
+      color: var(--text-primary);
+      border: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+      font-family: var(--font-sans);
+    }
+
+    .subject-select option {
+      background: var(--bg-surface);
+      color: var(--text-primary);
+    }
+
+    .chevron-icon {
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    /* Monumental Numerals Clock */
+    .focus-clock-wrap {
+      margin: 4px 0 24px;
     }
 
     .stopwatch-display {
       font-family: var(--font-mono);
-      font-size: clamp(3.2rem, 9.5vw, 5.2rem);
+      font-size: clamp(3.8rem, 11vw, 6.2rem);
       font-weight: 700;
-      letter-spacing: -0.03em;
+      letter-spacing: -0.04em;
       font-variant-numeric: tabular-nums;
       color: var(--text-primary);
-      margin-bottom: 28px;
+      line-height: 1;
       user-select: none;
       transition: color 0.2s ease, text-shadow 0.2s ease;
     }
 
     .timer-running .stopwatch-display {
       color: var(--text-primary);
-      text-shadow: 0 0 30px var(--accent-green-glow);
+      text-shadow: 0 0 40px var(--accent-green-glow);
     }
 
-    .timer-controls {
+    /* Focus Controls & Keyboard Badges */
+    .focus-controls, .timer-controls {
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
       justify-content: center;
+      align-items: center;
       margin-bottom: 18px;
+    }
+
+    .btn-focus-start {
+      padding: 12px 28px;
+      font-size: 0.96rem;
+      box-shadow: 0 4px 16px var(--accent-green-glow);
+    }
+
+    .btn-focus-end {
+      padding: 12px 22px;
+      font-size: 0.96rem;
+    }
+
+    .btn-focus-reset {
+      padding: 12px 16px;
+    }
+
+    .kbd-hint {
+      font-size: 0.65rem;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: inherit;
+      opacity: 0.85;
+      margin-left: 2px;
+    }
+
+    .focus-footer-links {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .link-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 0.78rem;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: color 0.15s ease;
+    }
+
+    .link-btn:hover {
+      color: var(--text-primary);
+      text-decoration: underline;
+    }
+
+    .dot-separator {
+      color: var(--border-default);
+    }
+
+    .keyboard-tip code {
+      font-family: var(--font-mono);
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-default);
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-size: 0.72rem;
+      color: var(--text-secondary);
     }
 
     /* Buttons */
     .btn {
       appearance: none;
       border: 1px solid transparent;
-      padding: 10px 22px;
+      padding: 9px 18px;
       border-radius: var(--radius-sm);
-      font-size: 0.92rem;
+      font-size: 0.88rem;
       font-weight: 600;
       cursor: pointer;
       display: inline-flex;
@@ -455,6 +644,7 @@
       gap: 8px;
       transition: all 0.15s ease-in-out;
       user-select: none;
+      font-family: inherit;
     }
 
     .btn:active {
@@ -462,14 +652,18 @@
     }
 
     .btn:disabled {
-      opacity: 0.4;
+      opacity: 0.35;
       cursor: not-allowed;
       transform: none !important;
     }
 
     .btn-sm {
-      padding: 6px 12px;
+      padding: 6px 14px;
       font-size: 0.78rem;
+    }
+
+    .btn-icon {
+      padding: 6px 10px;
     }
 
     .btn-primary {
@@ -490,8 +684,8 @@
     }
 
     .btn-secondary:hover:not(:disabled) {
-      background-color: #30363d;
-      border-color: #8b949e;
+      background-color: var(--border-default);
+      border-color: var(--text-secondary);
     }
 
     .btn-danger {
@@ -501,7 +695,7 @@
 
     .btn-danger:hover:not(:disabled) {
       background-color: var(--accent-red-hover);
-      box-shadow: 0 0 16px rgba(218, 54, 51, 0.4);
+      box-shadow: 0 0 16px rgba(244, 63, 94, 0.4);
     }
 
     .btn-ghost {
@@ -515,70 +709,158 @@
       color: var(--text-primary);
     }
 
-    /* ==========================================================================
-       Quick Manual Log Section
-       ========================================================================== */
-    .quick-log-drawer {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-default);
-      border-radius: var(--radius-md);
-      padding: 14px 20px;
-    }
-
-    .quick-log-drawer summary {
-      cursor: pointer;
-      color: var(--text-secondary);
-      font-size: 0.85rem;
-      font-weight: 500;
-      user-select: none;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .quick-log-drawer summary:hover {
-      color: var(--text-primary);
-    }
-
-    .quick-log-form {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      margin-top: 14px;
-      flex-wrap: wrap;
-    }
-
     .input-field {
       background: var(--bg-canvas);
       border: 1px solid var(--border-default);
       color: var(--text-primary);
-      padding: 8px 12px;
+      padding: 9px 12px;
       border-radius: var(--radius-sm);
       font-size: 0.85rem;
       outline: none;
       font-family: inherit;
+      width: 100%;
+      transition: border-color 0.15s ease;
     }
 
     .input-field:focus {
-      border-color: var(--accent-blue);
+      border-color: var(--accent-green);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-label {
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* Duration Quick Presets */
+    .quick-dur-chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    .dur-chip {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-default);
+      color: var(--text-secondary);
+      border-radius: 14px;
+      padding: 3px 10px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .dur-chip:hover {
+      border-color: var(--accent-green);
+      color: var(--text-primary);
+    }
+
+    /* Action List inside More Options Modal */
+    .more-actions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .action-item-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-align: left;
+      width: 100%;
+      color: inherit;
+      font-family: inherit;
+    }
+
+    .action-item-card:hover {
+      border-color: var(--text-secondary);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .action-item-info h4 {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+
+    .action-item-info p {
+      font-size: 0.74rem;
+      color: var(--text-muted);
     }
 
     /* ==========================================================================
-       GitHub-Style Contribution Heatmap
+       2. UNIFIED ACTIVITY & CONTRIBUTION (NO BOXES)
        ========================================================================== */
-    .heatmap-card {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-default);
-      border-radius: var(--radius-lg);
-      padding: 24px;
-      box-shadow: var(--shadow-sm);
+    .activity-ledger, .heatmap-card {
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 36px 0 24px;
+      box-shadow: none;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .ledger-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding-bottom: 2px;
+    }
+
+    .ledger-headline h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .ledger-headline p {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .ledger-subject-row {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .heatmap-frame {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      background: transparent;
+      border: none;
+      box-shadow: none;
     }
 
     .heatmap-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 12px;
       flex-wrap: wrap;
       gap: 12px;
     }
@@ -1128,7 +1410,9 @@
       align-items: center;
       font-size: 0.78rem;
       color: var(--text-muted);
-      padding: 10px 4px 0;
+      padding: 24px 0 16px;
+      border-top: 1px solid var(--border-muted);
+      margin-top: 24px;
       flex-wrap: wrap;
       gap: 12px;
     }
@@ -1136,9 +1420,11 @@
     footer a {
       color: var(--text-secondary);
       text-decoration: none;
+      transition: color 0.15s ease;
     }
 
     footer a:hover {
+      color: var(--text-primary);
       text-decoration: underline;
     }
 
@@ -1169,23 +1455,21 @@
 
   <div class="app-container">
     <!-- Top Bar -->
-    <header>
+    <header class="app-header">
       <div class="brand">
         <div class="brand-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
             <circle cx="12" cy="12" r="10"></circle>
             <polyline points="12 6 12 12 16 14"></polyline>
           </svg>
         </div>
-        <div>
-          <h1>Study Tracker <span class="brand-tag">v2.0</span></h1>
-        </div>
+        <div class="brand-title">Study Tracker</div>
       </div>
 
       <div class="header-actions">
-        <!-- Visual Style / Theme Selector -->
+        <!-- Visual Style Switcher -->
         <div class="theme-picker-pill" title="Choose your visual style">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="5"></circle>
             <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
           </svg>
@@ -1198,226 +1482,282 @@
           </select>
         </div>
 
-        <div class="sync-status">
+        <!-- Cloud Sync Status -->
+        <div class="sync-status" title="Real-time Cloud Status">
           <div class="status-dot"></div>
           <span id="storageModeLabel">localStorage</span>
         </div>
-        <button class="btn btn-secondary btn-sm" onclick="exportBackup()"
-          title="Download a JSON backup of your study logs">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-            <polyline points="7 10 12 15 17 10"></polyline>
-            <line x1="12" y1="15" x2="12" y2="3"></line>
+
+        <!-- Quick Log Trigger -->
+        <button class="btn btn-secondary btn-sm" onclick="openQuickLogModal()" title="Log past study session (L)">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
           </svg>
-          Export
+          <span>Log Time</span>
         </button>
-        <button class="btn btn-secondary btn-sm" onclick="triggerImport()" title="Import study logs from a JSON backup">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-            <polyline points="17 8 12 3 7 8"></polyline>
-            <line x1="12" y1="3" x2="12" y2="15"></line>
+
+        <!-- More Options Menu Trigger -->
+        <button class="btn btn-ghost btn-sm btn-icon" onclick="openMoreActionsModal()" title="Options, Data & Backups">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <circle cx="12" cy="12" r="2.2"></circle>
+            <circle cx="19" cy="12" r="2.2"></circle>
+            <circle cx="5" cy="12" r="2.2"></circle>
           </svg>
-          Import
         </button>
-        <!-- Hidden File Input for Import -->
-        <input type="file" id="importFileInput" accept=".json,application/json" style="display: none;"
-          onchange="handleFileImport(event)">
+
+        <input type="file" id="importFileInput" accept=".json,application/json" style="display: none;" onchange="handleFileImport(event)">
       </div>
     </header>
 
-    <!-- Summary Stats Cards -->
-    <div class="metrics-grid">
-      <div class="metric-card">
-        <div class="metric-title">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"></circle>
-            <polyline points="12 6 12 12 16 14"></polyline>
-          </svg>
-          Today's Study Time
+    <!-- 1. HERO SPLIT SECTION: Timer Stage + Side Stats Ledger (NO BOXES) -->
+    <div class="focus-hero-split">
+      <!-- Left/Center: Focus Stopwatch Stage -->
+      <main class="focus-stage" id="timerSection">
+        <!-- Session State Badge -->
+        <div class="focus-badge" id="timerPill">
+          <span class="focus-pulse-dot"></span>
+          <span>Ready to Focus</span>
         </div>
-        <div class="metric-value" id="metricToday">0m</div>
-        <div class="metric-subtitle" id="metricGoalText">Target: 5h daily</div>
-      </div>
 
-      <div class="metric-card">
-        <div class="metric-title">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-            <path
-              d="M12 2c-.3 0-.6.1-.8.4-1.2 1.4-2.4 3-3.1 4.9C7.2 9.4 7 11.2 7 13c0 2.8 2.2 5 5 5s5-2.2 5-5c0-1.8-.2-3.6-1.1-5.7-.7-1.9-1.9-3.5-3.1-4.9-.2-.3-.5-.4-.8-.4z">
-            </path>
-          </svg>
-          Current Daily Streak
-        </div>
-        <div class="metric-value" id="metricStreak">0 days</div>
-        <div class="metric-subtitle" id="metricStreakSub">Consecutive active days</div>
-      </div>
-
-      <div class="metric-card">
-        <div class="metric-title">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
-          </svg>
-          Total Hours Tracked
-        </div>
-        <div class="metric-value" id="metricTotal">0.0 hrs</div>
-        <div class="metric-subtitle" id="metricActiveDays">0 active days recorded</div>
-      </div>
-    </div>
-
-    <!-- Study Timer Section -->
-    <div class="timer-section" id="timerSection">
-      <div class="timer-pill" id="timerPill">
-        <span>Session Idle</span>
-      </div>
-
-      <!-- Subject Picker inside Timer -->
-      <div class="subject-picker-bar">
-        <span class="subject-picker-label">Subject:</span>
-        <div class="subject-select-wrap">
+        <!-- Integrated Subject Chip Pill -->
+        <div class="subject-chip-pill" title="Change session subject">
           <span class="subject-dot" id="timerSubjectDot"></span>
           <select id="timerSubjectSelect" class="subject-select" onchange="onTimerSubjectChange()">
             <!-- Populated dynamically -->
           </select>
+          <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
         </div>
-        <button class="btn btn-ghost btn-sm" onclick="openSubjectModal()" title="Manage or Add Subjects"
-          style="padding: 2px 8px; font-size: 0.75rem;">
-          ⚙️ Manage
-        </button>
-      </div>
 
-      <div class="stopwatch-display" id="timeDisplay">00:00:00</div>
+        <!-- Monumental Typography Timer Display -->
+        <div class="focus-clock-wrap">
+          <div class="stopwatch-display" id="timeDisplay">00:00:00</div>
+        </div>
 
-      <div class="timer-controls">
-        <button class="btn btn-primary" id="btnToggle" onclick="toggleTimer()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-            <polygon points="5 3 19 12 5 21 5 3"></polygon>
-          </svg>
-          Start Session
-        </button>
+        <!-- Tactile Control Bar with Keyboard Hints -->
+        <div class="focus-controls">
+          <button class="btn btn-primary btn-focus-start" id="btnToggle" onclick="toggleTimer()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+            <span>Start Focus</span>
+            <kbd class="kbd-hint">Space</kbd>
+          </button>
 
-        <button class="btn btn-danger" id="btnEnd" onclick="endSession()" disabled>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-            <rect x="5" y="5" width="14" height="14" rx="2"></rect>
-          </svg>
-          End & Log Session
-        </button>
+          <button class="btn btn-danger btn-focus-end" id="btnEnd" onclick="endSession()" disabled>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <rect x="5" y="5" width="14" height="14" rx="2"></rect>
+            </svg>
+            <span>Finish & Log</span>
+            <kbd class="kbd-hint">E</kbd>
+          </button>
 
-        <button class="btn btn-secondary" id="btnReset" onclick="resetTimer()" disabled>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
-            <path d="M3 3v5h5"></path>
-          </svg>
-          Reset
-        </button>
-      </div>
+          <button class="btn btn-secondary btn-focus-reset" id="btnReset" onclick="resetTimer()" disabled title="Reset stopwatch (R)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+              <path d="M3 3v5h5"></path>
+            </svg>
+          </button>
+        </div>
+
+        <div class="focus-footer-links">
+          <button class="link-btn" onclick="openSubjectModal()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+            Manage Subjects
+          </button>
+          <span class="dot-separator">&bull;</span>
+          <span class="keyboard-tip">Hotkeys: <code>Space</code> to pause, <code>E</code> to finish</span>
+        </div>
+      </main>
+
+      <!-- Right: Vertical Stats List (On the side, no boxes!) -->
+      <aside class="side-metrics-ledger">
+        <div class="side-metrics-header">
+          <span class="side-metrics-caption">Focus Metrics</span>
+        </div>
+
+        <div class="side-metric-item">
+          <span class="metric-label">Today's Study Time</span>
+          <div class="metric-val" id="metricToday">0m</div>
+          <span class="metric-sub" id="metricGoalText">Target: 5h daily</span>
+        </div>
+
+        <div class="side-metric-divider"></div>
+
+        <div class="side-metric-item">
+          <span class="metric-label">Current Daily Streak</span>
+          <div class="metric-val streak-val" id="metricStreak">0 days</div>
+          <span class="metric-sub" id="metricStreakSub">Consecutive active days</span>
+        </div>
+
+        <div class="side-metric-divider"></div>
+
+        <div class="side-metric-item">
+          <span class="metric-label">Total Hours Tracked</span>
+          <div class="metric-val" id="metricTotal">0.0 hrs</div>
+          <span class="metric-sub" id="metricActiveDays">0 active days recorded</span>
+        </div>
+      </aside>
     </div>
 
-    <!-- Quick Manual Entry Drawer -->
-    <details class="quick-log-drawer">
-      <summary>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="12" y1="5" x2="12" y2="19"></line>
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-        </svg>
-        Manually Log Study Time
-      </summary>
-      <div class="quick-log-form">
-        <input type="date" id="manualDate" class="input-field">
-        <div class="subject-select-wrap"
-          style="background: var(--bg-canvas); border: 1px solid var(--border-default); border-radius: var(--radius-sm); padding: 4px 10px;">
-          <span class="subject-dot" id="manualSubjectDot"></span>
-          <select id="manualSubjectSelect" class="subject-select" onchange="onManualSubjectChange()"
-            style="font-size: 0.82rem;">
-            <!-- Populated dynamically -->
-          </select>
-        </div>
-        <input type="number" id="manualMinutes" class="input-field" placeholder="Duration (minutes)" min="1" max="1440">
-        <button class="btn btn-secondary" onclick="logManualEntry()">Log Session</button>
-        <button class="btn btn-ghost btn-sm" onclick="seedDemoData()"
-          title="Populate realistic dummy data for 90 days across subjects to test the heatmap">
-          🎲 Seed Demo Data
-        </button>
-      </div>
-    </details>
-
-    <!-- Subject Breakdown & Heatmap Filter Card -->
-    <div class="subject-breakdown-card" id="subjectBreakdownCard">
-      <div class="subject-breakdown-header">
-        <div class="subject-breakdown-title">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
-            <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
-          </svg>
-          <span>Subject Breakdown & Heatmap Filter</span>
-        </div>
-        <button class="btn btn-secondary btn-sm" onclick="openSubjectModal()">
-          + Add / Edit Subjects
-        </button>
-      </div>
-
-      <!-- Multi-color distribution progress bar -->
-      <div class="subject-progress-bar" id="subjectProgressBar"></div>
-
-      <!-- Filter pills -->
-      <div class="subject-pills-row" id="subjectPillsRow"></div>
-    </div>
-
-    <!-- 52-Week Contribution Heatmap -->
-    <div class="heatmap-card">
-      <div class="heatmap-header">
-        <div>
-          <h2>Study Activity Heatmap</h2>
+    <!-- 2. UNIFIED ACTIVITY & CONTRIBUTION (NO BOXES) -->
+    <section class="activity-ledger">
+      <!-- Ledger Header -->
+      <div class="ledger-header">
+        <div class="ledger-headline">
+          <h2>Yearly Activity Ledger</h2>
           <p id="heatmapSubtitle">Tracking daily focus duration across the last 52 weeks</p>
         </div>
       </div>
 
-      <div class="heatmap-scroll-container">
-        <div class="heatmap-inner-wrapper">
-          <!-- Month Header Labels -->
-          <div class="months-header" id="monthsHeader">
-            <span></span><!-- day label column offset -->
-          </div>
+      <!-- Subject Balance & Filter Strip -->
+      <div class="ledger-subject-row">
+        <!-- Distribution progress bar -->
+        <div class="subject-progress-bar" id="subjectProgressBar" title="Subject study time distribution"></div>
 
-          <div class="heatmap-body">
-            <!-- Day of Week (Mon - Sun) Labels -->
-            <div class="days-labels">
-              <span>Mon</span>
+        <!-- Filter pills -->
+        <div class="subject-pills-row" id="subjectPillsRow"></div>
+      </div>
+
+      <!-- 52-Week Contribution Grid -->
+      <div class="heatmap-frame">
+        <div class="heatmap-scroll-container">
+          <div class="heatmap-inner-wrapper">
+            <!-- Month Header Labels -->
+            <div class="months-header" id="monthsHeader">
               <span></span>
-              <span>Wed</span>
-              <span></span>
-              <span>Fri</span>
-              <span></span>
-              <span>Sun</span>
             </div>
 
-            <!-- Heatmap Grid (7 rows x 53 columns) -->
-            <div class="heatmap-grid" id="heatmapGrid"></div>
+            <div class="heatmap-body">
+              <div class="days-labels">
+                <span>Mon</span>
+                <span></span>
+                <span>Wed</span>
+                <span></span>
+                <span>Fri</span>
+                <span></span>
+                <span>Sun</span>
+              </div>
+              <div class="heatmap-grid" id="heatmapGrid"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Heatmap Footer with Summary and Full Green 5h Legend -->
+        <div class="heatmap-footer">
+          <span id="heatmapStatsSummary">Calculating focus statistics...</span>
+          <div class="legend-group">
+            <span>Less</span>
+            <div class="legend-boxes">
+              <div class="heat-cell" data-level="0" title="0 mins"></div>
+              <div class="heat-cell" data-level="1" title="1 - 59 mins (&lt; 1h)"></div>
+              <div class="heat-cell" data-level="2" title="1h - 2.5h (60 - 149 mins)"></div>
+              <div class="heat-cell" data-level="3" title="2.5h - 5h (150 - 299 mins)"></div>
+              <div class="heat-cell" data-level="4" title="5+ hours (Fully Green)"></div>
+            </div>
+            <span>More (5h+)</span>
           </div>
         </div>
       </div>
+    </section>
 
-      <div class="heatmap-footer">
-        <span id="heatmapStatsSummary">Calculating focus statistics...</span>
-        <div class="legend-group">
-          <span>Less</span>
-          <div class="legend-boxes">
-            <div class="heat-cell" data-level="0" title="0 mins"></div>
-            <div class="heat-cell" data-level="1" title="1 - 59 mins (&lt; 1h)"></div>
-            <div class="heat-cell" data-level="2" title="1h - 2.5h (60 - 149 mins)"></div>
-            <div class="heat-cell" data-level="3" title="2.5h - 5h (150 - 299 mins)"></div>
-            <div class="heat-cell" data-level="4" title="5+ hours (Fully Green)"></div>
+    <!-- Discreet Modern Footer -->
+    <footer>
+      <span>Focused work session tracker &bull; Cloud Synced & Offline Ready</span>
+      <span><a href="javascript:void(0)" onclick="openMoreActionsModal()">Options & Backups</a></span>
+    </footer>
+  </div>
+
+  <!-- Quick Manual Log Modal -->
+  <div class="modal-overlay" id="quickLogModal" onclick="closeQuickLogModalOnOverlay(event)">
+    <div class="modal-content" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3>+ Log Past Study Session</h3>
+        <button class="modal-close-btn" onclick="closeQuickLogModal()">&times;</button>
+      </div>
+      <div class="modal-body" style="gap: 16px;">
+        <div class="form-group">
+          <label class="form-label" for="manualDate">Session Date</label>
+          <input type="date" id="manualDate" class="input-field">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Subject</label>
+          <div class="subject-chip-pill" style="margin-bottom: 0; width: 100%; justify-content: flex-start;">
+            <span class="subject-dot" id="manualSubjectDot"></span>
+            <select id="manualSubjectSelect" class="subject-select" onchange="onManualSubjectChange()" style="width: 100%;">
+              <!-- Populated dynamically -->
+            </select>
           </div>
-          <span>More</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="manualMinutes">Study Duration (Minutes)</label>
+          <input type="number" id="manualMinutes" class="input-field" placeholder="e.g. 60 (or choose preset below)" min="1" max="1440">
+          <div class="quick-dur-chips">
+            <span class="dur-chip" onclick="setQuickMinutes(15)">+15m</span>
+            <span class="dur-chip" onclick="setQuickMinutes(30)">+30m</span>
+            <span class="dur-chip" onclick="setQuickMinutes(60)">+1 hr</span>
+            <span class="dur-chip" onclick="setQuickMinutes(120)">+2 hrs</span>
+            <span class="dur-chip" onclick="setQuickMinutes(300)">+5 hrs (Max Green)</span>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" onclick="logManualEntry()" style="justify-content: center; margin-top: 6px; padding: 11px;">
+          Log Session to Ledger
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- More Options & Data Modal -->
+  <div class="modal-overlay" id="moreActionsModal" onclick="closeMoreActionsModalOnOverlay(event)">
+    <div class="modal-content" style="max-width: 460px;">
+      <div class="modal-header">
+        <h3>Options & Data Management</h3>
+        <button class="modal-close-btn" onclick="closeMoreActionsModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="more-actions-list">
+          <button class="action-item-card" onclick="exportBackup(); closeMoreActionsModal();">
+            <div class="action-item-info">
+              <h4>📥 Export Backup JSON</h4>
+              <p>Download a full local JSON copy of your study logs and subjects</p>
+            </div>
+            <span class="btn btn-secondary btn-sm">Export</span>
+          </button>
+
+          <button class="action-item-card" onclick="triggerImport(); closeMoreActionsModal();">
+            <div class="action-item-info">
+              <h4>📤 Import Backup JSON</h4>
+              <p>Restore or merge study history from a previously saved JSON file</p>
+            </div>
+            <span class="btn btn-secondary btn-sm">Import</span>
+          </button>
+
+          <button class="action-item-card" onclick="seedDemoData(); closeMoreActionsModal();">
+            <div class="action-item-info">
+              <h4>🎲 Seed 90-Day Demo Data</h4>
+              <p>Generate realistic study sessions (including 5h+ days) to test the heatmap</p>
+            </div>
+            <span class="btn btn-secondary btn-sm">Generate</span>
+          </button>
+
+          <button class="action-item-card" onclick="clearAllData(); closeMoreActionsModal();" style="border-color: rgba(244, 63, 94, 0.2);">
+            <div class="action-item-info">
+              <h4 style="color: var(--accent-red);">🗑️ Reset All Data</h4>
+              <p>Permanently erase all local & cloud study logs (cannot be undone)</p>
+            </div>
+            <span class="btn btn-danger btn-sm">Reset</span>
+          </button>
         </div>
       </div>
     </div>
-
-    <!-- Footer -->
-    <footer>
-      <span>Zero-dependency &bull; Works offline via localStorage &bull; Deployable to GitHub Pages, Vercel &
-        Firebase</span>
-      <span><a href="javascript:void(0)" onclick="clearAllData()">Reset All Data</a></span>
-    </footer>
   </div>
 
   <!-- Subject Management Modal -->
@@ -1894,6 +2234,57 @@
       }
     }
 
+    // Quick Log Modal Handlers
+    function openQuickLogModal() {
+      const modal = document.getElementById('quickLogModal');
+      if (!modal) return;
+      modal.classList.add('open');
+      if (!document.getElementById('manualDate').value) {
+        document.getElementById('manualDate').value = todayDateStr || getLocalDateString(new Date());
+      }
+      updateSubjectDropdowns();
+      setTimeout(() => {
+        const input = document.getElementById('manualMinutes');
+        if (input) input.focus();
+      }, 100);
+    }
+
+    function closeQuickLogModal() {
+      const modal = document.getElementById('quickLogModal');
+      if (modal) modal.classList.remove('open');
+    }
+
+    function closeQuickLogModalOnOverlay(e) {
+      if (e.target.id === 'quickLogModal') {
+        closeQuickLogModal();
+      }
+    }
+
+    function setQuickMinutes(mins) {
+      const input = document.getElementById('manualMinutes');
+      if (input) {
+        input.value = mins;
+        input.focus();
+      }
+    }
+
+    // More Actions & Options Modal Handlers
+    function openMoreActionsModal() {
+      const modal = document.getElementById('moreActionsModal');
+      if (modal) modal.classList.add('open');
+    }
+
+    function closeMoreActionsModal() {
+      const modal = document.getElementById('moreActionsModal');
+      if (modal) modal.classList.remove('open');
+    }
+
+    function closeMoreActionsModalOnOverlay(e) {
+      if (e.target.id === 'moreActionsModal') {
+        closeMoreActionsModal();
+      }
+    }
+
     function renderSubjectManageList() {
       const list = document.getElementById('subjectManageList');
       list.innerHTML = '';
@@ -2235,6 +2626,7 @@
         renderSubjectBreakdown();
         showToast(`Added ${minsInput} mins to ${sub.name} on ${dateInput}`);
         document.getElementById('manualMinutes').value = '';
+        closeQuickLogModal();
       } catch (err) {
         showToast("Error saving manual session", true);
       }
@@ -2326,6 +2718,7 @@
           cell.addEventListener('click', (e) => {
             handleCellHover(e);
             document.getElementById('manualDate').value = dateStr;
+            openQuickLogModal();
             showToast(`Selected date: ${dateStr}`);
           });
         }
@@ -2735,6 +3128,40 @@
           handleCellLeave();
         }
       }, { passive: true });
+
+      // Native desktop keyboard shortcuts
+      window.addEventListener('keydown', (e) => {
+        if (['INPUT', 'SELECT', 'TEXTAREA'].includes(e.target.tagName)) {
+          if (e.key === 'Escape') {
+            closeSubjectModal();
+            closeQuickLogModal();
+            closeMoreActionsModal();
+          }
+          return;
+        }
+
+        if (e.code === 'Space') {
+          e.preventDefault();
+          toggleTimer();
+        } else if (e.key === 'e' || e.key === 'E') {
+          e.preventDefault();
+          if (timerState === 'running' || timerState === 'paused') {
+            endSession();
+          }
+        } else if (e.key === 'r' || e.key === 'R') {
+          e.preventDefault();
+          if (accumulatedSeconds > 0) {
+            resetTimer();
+          }
+        } else if (e.key === 'l' || e.key === 'L') {
+          e.preventDefault();
+          openQuickLogModal();
+        } else if (e.key === 'Escape') {
+          closeSubjectModal();
+          closeQuickLogModal();
+          closeMoreActionsModal();
+        }
+      });
     }
 
     initApp();
