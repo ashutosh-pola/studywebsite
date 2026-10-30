@@ -8,13 +8,26 @@
 
   <!-- Favicon SVG -->
   <link rel="icon"
-    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%2339d353%22><circle cx=%2212%22 cy=%2212%22 r=%2210%22/><polyline points=%2212 6 12 12 16 14%22 fill=%22none%22 stroke=%22%230d1117%22 stroke-width=%222.5%22/></svg>">
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%2310b981%22><circle cx=%2212%22 cy=%2212%22 r=%2210%22/><polyline points=%2212 6 12 12 16 14%22 fill=%22none%22 stroke=%22%23090a0f%22 stroke-width=%222.5%22/></svg>">
 
   <!-- Mobile & Tablet PWA Meta Tags -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Study Tracker">
-  <meta name="theme-color" content="#0d1117">
+  <meta name="theme-color" content="#090a0f">
+
+  <!-- Modern Clean Typography (Plus Jakarta Sans & JetBrains Mono) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Early Theme Bootstrap to prevent flash of wrong style -->
+  <script>
+    (function () {
+      const savedTheme = localStorage.getItem('study_tracker_theme') || 'minimalist-dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
 
   <!-- Firebase App & Firestore Compat SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -22,9 +35,50 @@
 
   <style>
     /* ==========================================================================
-       GitHub Dark Mode Theme Tokens
+       THEME DESIGN SYSTEM (Minimalist Studio, GitHub Dark, OLED, Minimalist Light)
        ========================================================================== */
-    :root {
+    :root, [data-theme="minimalist-dark"] {
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 12px 32px -8px rgba(0, 0, 0, 0.6);
+
+      /* 1. Minimalist Studio (Clean Obsidian & Radiant Emerald) */
+      --bg-canvas: #090a0f;
+      --bg-surface: #12131b;
+      --bg-subtle: #191b26;
+      --border-default: rgba(255, 255, 255, 0.08);
+      --border-muted: rgba(255, 255, 255, 0.04);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+
+      --accent-green: #10b981;
+      --accent-green-hover: #059669;
+      --accent-green-glow: rgba(16, 185, 129, 0.35);
+      --accent-red: #f43f5e;
+      --accent-red-hover: #e11d48;
+      --accent-blue: #38bdf8;
+      --accent-purple: #a855f7;
+      --accent-gold: #f59e0b;
+
+      /* GitHub Activity Heatmap Green Palette (5+ hrs = Full Green) */
+      --heat-0: #151722;
+      --heat-1: #064e3b;
+      --heat-2: #047857;
+      --heat-3: #10b981;
+      --heat-4: #34d399;
+
+      --timer-gradient: radial-gradient(circle at 50% 12%, #191c2b 0%, #12131b 85%);
+      --brand-gradient: linear-gradient(135deg, #059669, #34d399);
+      --tooltip-bg: #12131b;
+    }
+
+    [data-theme="github-dark"] {
       --bg-canvas: #0d1117;
       --bg-surface: #161b22;
       --bg-subtle: #21262d;
@@ -43,21 +97,75 @@
       --accent-purple: #bc8cff;
       --accent-gold: #d29922;
 
-      /* GitHub Activity Heatmap Green Palette */
       --heat-0: #161b22;
       --heat-1: #0e4429;
       --heat-2: #006d32;
       --heat-3: #26a641;
       --heat-4: #39d353;
 
-      --radius-sm: 6px;
-      --radius-md: 10px;
-      --radius-lg: 16px;
-      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
-      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
+      --timer-gradient: radial-gradient(circle at 50% 15%, #1c232e 0%, #161b22 80%);
+      --brand-gradient: linear-gradient(135deg, #238636, #39d353);
+      --tooltip-bg: #1c2128;
+    }
 
-      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
-      --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    [data-theme="oled-black"] {
+      --bg-canvas: #000000;
+      --bg-surface: #0a0a0a;
+      --bg-subtle: #141414;
+      --border-default: #262626;
+      --border-muted: #171717;
+      --text-primary: #ffffff;
+      --text-secondary: #a3a3a3;
+      --text-muted: #525252;
+
+      --accent-green: #00e676;
+      --accent-green-hover: #00c853;
+      --accent-green-glow: rgba(0, 230, 118, 0.35);
+      --accent-red: #ff1744;
+      --accent-red-hover: #d50000;
+      --accent-blue: #00b0ff;
+      --accent-purple: #d500f9;
+      --accent-gold: #ffd600;
+
+      --heat-0: #121212;
+      --heat-1: #003315;
+      --heat-2: #006b2b;
+      --heat-3: #00ab47;
+      --heat-4: #00ff66;
+
+      --timer-gradient: radial-gradient(circle at 50% 15%, #121212 0%, #060606 85%);
+      --brand-gradient: linear-gradient(135deg, #00ab47, #00ff66);
+      --tooltip-bg: #0a0a0a;
+    }
+
+    [data-theme="minimalist-light"] {
+      --bg-canvas: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-subtle: #f1f5f9;
+      --border-default: #e2e8f0;
+      --border-muted: #cbd5e1;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+
+      --accent-green: #059669;
+      --accent-green-hover: #047857;
+      --accent-green-glow: rgba(5, 150, 105, 0.2);
+      --accent-red: #e11d48;
+      --accent-red-hover: #be123c;
+      --accent-blue: #0284c7;
+      --accent-purple: #7c3aed;
+      --accent-gold: #d97706;
+
+      --heat-0: #e2e8f0;
+      --heat-1: #9be9a8;
+      --heat-2: #40c463;
+      --heat-3: #30a14e;
+      --heat-4: #216e39;
+
+      --timer-gradient: radial-gradient(circle at 50% 15%, #ffffff 0%, #f1f5f9 85%);
+      --brand-gradient: linear-gradient(135deg, #059669, #10b981);
+      --tooltip-bg: #ffffff;
     }
 
     * {
@@ -77,6 +185,11 @@
       align-items: center;
       padding: 24px 16px 50px;
       -webkit-font-smoothing: antialiased;
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    body, header, .metric-card, .timer-section, .subject-breakdown-card, .heatmap-card, .modal-content, .btn, .input-field, .theme-picker-pill, .sync-status {
+      transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
     }
 
     .app-container {
@@ -112,13 +225,13 @@
     .brand-icon {
       width: 34px;
       height: 34px;
-      background: linear-gradient(135deg, #238636, #39d353);
+      background: var(--brand-gradient);
       border-radius: var(--radius-sm);
       display: flex;
       align-items: center;
       justify-content: center;
       color: #ffffff;
-      box-shadow: 0 2px 8px rgba(35, 134, 54, 0.4);
+      box-shadow: 0 2px 8px var(--accent-green-glow);
     }
 
     .brand h1 {
@@ -143,6 +256,50 @@
       align-items: center;
       gap: 10px;
       flex-wrap: wrap;
+    }
+
+    /* Theme / Style Switcher Pill */
+    .theme-picker-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      padding: 4px 10px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-default);
+      border-radius: 20px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .theme-picker-pill:hover {
+      border-color: var(--accent-green);
+      color: var(--text-primary);
+    }
+
+    .theme-picker-label {
+      font-weight: 600;
+      color: var(--text-muted);
+      font-size: 0.74rem;
+      letter-spacing: 0.02em;
+    }
+
+    .theme-select {
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font-size: 0.78rem;
+      font-weight: 600;
+      font-family: var(--font-sans);
+      cursor: pointer;
+      outline: none;
+      padding-right: 2px;
+    }
+
+    .theme-select option {
+      background: var(--bg-surface);
+      color: var(--text-primary);
     }
 
     .sync-status {
@@ -218,7 +375,7 @@
        Study Timer Section
        ========================================================================== */
     .timer-section {
-      background: radial-gradient(circle at 50% 15%, #1c232e 0%, var(--bg-surface) 80%);
+      background: var(--timer-gradient);
       border: 1px solid var(--border-default);
       border-radius: var(--radius-lg);
       padding: 36px 24px 32px;
@@ -248,9 +405,9 @@
     }
 
     .timer-pill.running {
-      background: rgba(35, 134, 54, 0.15);
+      background: rgba(16, 185, 129, 0.15);
       border-color: var(--accent-green);
-      color: #3fb950;
+      color: var(--accent-green);
     }
 
     .timer-pill.paused {
@@ -263,7 +420,8 @@
       font-family: var(--font-mono);
       font-size: clamp(3.2rem, 9.5vw, 5.2rem);
       font-weight: 700;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.03em;
+      font-variant-numeric: tabular-nums;
       color: var(--text-primary);
       margin-bottom: 28px;
       user-select: none;
@@ -271,8 +429,8 @@
     }
 
     .timer-running .stopwatch-display {
-      color: #ffffff;
-      text-shadow: 0 0 30px rgba(57, 211, 83, 0.3);
+      color: var(--text-primary);
+      text-shadow: 0 0 30px var(--accent-green-glow);
     }
 
     .timer-controls {
@@ -527,7 +685,8 @@
 
     .heat-cell[data-level="4"] {
       background-color: var(--heat-4);
-      outline-color: rgba(255, 255, 255, 0.1);
+      outline-color: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 0 6px var(--accent-green-glow);
     }
 
     .heat-cell.future {
@@ -577,9 +736,9 @@
        ========================================================================== */
     #tooltip {
       position: fixed;
-      background: #1c2128;
-      color: #f0f6fc;
-      border: 1px solid #444c56;
+      background: var(--tooltip-bg, var(--bg-surface));
+      color: var(--text-primary);
+      border: 1px solid var(--border-default);
       border-radius: var(--radius-sm);
       padding: 7px 12px;
       font-size: 0.76rem;
@@ -588,12 +747,13 @@
       transition: opacity 0.12s ease-out;
       z-index: 99999;
       white-space: nowrap;
-      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.7);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
       line-height: 1.4;
+      backdrop-filter: blur(10px);
     }
 
     #tooltip strong {
-      color: #39d353;
+      color: var(--accent-green);
       font-weight: 600;
     }
 
@@ -606,14 +766,14 @@
       margin-left: -5px;
       border-width: 5px;
       border-style: solid;
-      border-color: #1c2128 transparent transparent transparent;
+      border-color: var(--tooltip-bg, var(--bg-surface)) transparent transparent transparent;
     }
 
     /* Arrow caret pointing up when tooltip is flipped below */
     #tooltip.flipped::after {
       top: auto;
       bottom: 100%;
-      border-color: transparent transparent #1c2128 transparent;
+      border-color: transparent transparent var(--tooltip-bg, var(--bg-surface)) transparent;
     }
 
     #toast {
@@ -1023,6 +1183,21 @@
       </div>
 
       <div class="header-actions">
+        <!-- Visual Style / Theme Selector -->
+        <div class="theme-picker-pill" title="Choose your visual style">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+          </svg>
+          <span class="theme-picker-label">Style:</span>
+          <select id="themeSelector" class="theme-select" onchange="setAppTheme(this.value)">
+            <option value="minimalist-dark" selected>Minimalist Studio</option>
+            <option value="github-dark">GitHub Dark (Original)</option>
+            <option value="oled-black">OLED Midnight</option>
+            <option value="minimalist-light">Minimalist Paper</option>
+          </select>
+        </div>
+
         <div class="sync-status">
           <div class="status-dot"></div>
           <span id="storageModeLabel">localStorage</span>
@@ -1061,7 +1236,7 @@
           Today's Study Time
         </div>
         <div class="metric-value" id="metricToday">0m</div>
-        <div class="metric-subtitle" id="metricGoalText">Target: 120m daily</div>
+        <div class="metric-subtitle" id="metricGoalText">Target: 5h daily</div>
       </div>
 
       <div class="metric-card">
@@ -1227,10 +1402,10 @@
           <span>Less</span>
           <div class="legend-boxes">
             <div class="heat-cell" data-level="0" title="0 mins"></div>
-            <div class="heat-cell" data-level="1" title="1 - 30 mins"></div>
-            <div class="heat-cell" data-level="2" title="31 - 60 mins"></div>
-            <div class="heat-cell" data-level="3" title="61 - 120 mins"></div>
-            <div class="heat-cell" data-level="4" title="120+ mins"></div>
+            <div class="heat-cell" data-level="1" title="1 - 59 mins (&lt; 1h)"></div>
+            <div class="heat-cell" data-level="2" title="1h - 2.5h (60 - 149 mins)"></div>
+            <div class="heat-cell" data-level="3" title="2.5h - 5h (150 - 299 mins)"></div>
+            <div class="heat-cell" data-level="4" title="5+ hours (Fully Green)"></div>
           </div>
           <span>More</span>
         </div>
@@ -2070,10 +2245,10 @@
     // ========================================================================
     function getHeatLevel(minutes) {
       if (!minutes || minutes <= 0) return 0;
-      if (minutes <= 30) return 1;
-      if (minutes <= 60) return 2;
-      if (minutes <= 120) return 3;
-      return 4;
+      if (minutes < 60) return 1;       // 1 - 59 mins (< 1h)
+      if (minutes < 150) return 2;      // 1h - 2.5h (60 - 149 mins)
+      if (minutes < 300) return 3;      // 2.5h - 5h (150 - 299 mins)
+      return 4;                         // 5+ hours (300+ mins) -> FULLY GREEN!
     }
 
     function renderHeatmap() {
@@ -2265,13 +2440,25 @@
     // SUMMARY STATS CALCULATION
     // ========================================================================
     function updateMetrics() {
-      // 1. Today's Minutes
+      // 1. Today's Minutes & 5-hour Target
       const todayRecord = normalizeDayData(studyData[todayDateStr]);
       const todayMins = todayRecord.total;
       if (todayMins >= 60) {
         document.getElementById('metricToday').textContent = `${Math.floor(todayMins / 60)}h ${todayMins % 60}m`;
       } else {
         document.getElementById('metricToday').textContent = `${todayMins}m`;
+      }
+
+      const goalEl = document.getElementById('metricGoalText');
+      if (goalEl) {
+        const goalPct = Math.min(100, Math.round((todayMins / 300) * 100));
+        if (todayMins >= 300) {
+          goalEl.textContent = '🎉 5h Goal Reached (Full Green!)';
+          goalEl.style.color = 'var(--accent-green)';
+        } else {
+          goalEl.textContent = `Target: 5h daily (${goalPct}%)`;
+          goalEl.style.color = '';
+        }
       }
 
       // 2. Current Daily Streak
@@ -2406,7 +2593,7 @@
 
           for (let s = 0; s < numSubs; s++) {
             const sub = shuffled[s];
-            const randMins = [25, 40, 60, 90, 120][Math.floor(Math.random() * 5)];
+            const randMins = [30, 45, 60, 90, 120, 180, 240, 310, 360][Math.floor(Math.random() * 9)];
             currentDay.subjects[sub.id] = (currentDay.subjects[sub.id] || 0) + randMins;
             currentDay.total += randMins;
           }
@@ -2438,6 +2625,54 @@
       toast.style.borderColor = isError ? 'var(--accent-red)' : 'var(--accent-green)';
       toast.classList.add('show');
       setTimeout(() => toast.classList.remove('show'), 3200);
+    }
+
+    // ========================================================================
+    // VISUAL STYLE & THEME MANAGER
+    // ========================================================================
+    const THEME_STORAGE_KEY = 'study_tracker_theme';
+
+    function initTheme() {
+      const savedTheme = localStorage.getItem(THEME_STORAGE_KEY) || 'minimalist-dark';
+      setAppTheme(savedTheme, false);
+    }
+
+    function setAppTheme(themeName, notify = true) {
+      document.documentElement.setAttribute('data-theme', themeName);
+      document.body.setAttribute('data-theme', themeName);
+
+      const selector = document.getElementById('themeSelector');
+      if (selector && selector.value !== themeName) {
+        selector.value = themeName;
+      }
+
+      localStorage.setItem(THEME_STORAGE_KEY, themeName);
+
+      // Synchronize mobile status bar meta tag
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+      if (metaThemeColor) {
+        const themeColors = {
+          'minimalist-dark': '#090a0f',
+          'github-dark': '#0d1117',
+          'oled-black': '#000000',
+          'minimalist-light': '#f8fafc'
+        };
+        metaThemeColor.setAttribute('content', themeColors[themeName] || '#090a0f');
+      }
+
+      if (notify) {
+        showToast(`✨ Style switched to ${getThemeDisplayName(themeName)}`);
+      }
+    }
+
+    function getThemeDisplayName(themeName) {
+      switch (themeName) {
+        case 'minimalist-dark': return 'Minimalist Studio';
+        case 'github-dark': return 'GitHub Dark (Original)';
+        case 'oled-black': return 'OLED Midnight';
+        case 'minimalist-light': return 'Minimalist Paper';
+        default: return themeName;
+      }
     }
 
     function setupRealtimeCloudSync() {
@@ -2482,6 +2717,7 @@
     // INITIALIZATION
     // ========================================================================
     async function initApp() {
+      initTheme();
       initDates();
       subjects = await StorageAdapter.loadSubjects();
       studyData = await StorageAdapter.loadData();
